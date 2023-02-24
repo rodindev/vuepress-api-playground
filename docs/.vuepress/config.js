@@ -4,7 +4,7 @@ const assetsVersion = '0.1.0'
 
 module.exports = {
   base: basePath,
-  title: 'Vuepress API Playground',
+  title: 'VuePress API Playground',
   description: description,
   head: [
     ['link', { rel: 'icon', href: `/favicon.ico?v=${assetsVersion}` }],
