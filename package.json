@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/rodindev/vuepress-api-playground/issues"
   },
-  "description": "The vuepress-api-playground is a Vue.js component for showcasing and testing API use cases in VuePress documentation",
+  "description": "The VuePress API Playground is a Vue.js component for showcasing and testing API use cases in VuePress documentation",
   "keywords": [
     "vue",
     "vuepress",
