@@ -1,0 +1,41 @@
+.vp-playground
+  .vp-playground__method
+    display block
+    margin-top 1rem
+  .vp-playground__response
+    margin 1rem 0
+    padding 1rem
+    border 0.0625rem solid #eff3f8
+    border-radius 4px
+  input
+    cursor text
+    height 2rem
+    color lighten($textColor, 25%)
+    display inline-block
+    border 1px solid darken($borderColor, 10%)
+    border-radius 4px
+    font-size 0.9rem
+    line-height 2rem
+    padding 0 0.5rem
+    outline none
+    transition all .2s ease
+    &:focus
+      cursor auto
+      border-color $accentColor
+  button
+    display inline-block
+    font-size 1rem
+    cursor pointer
+    color #fff
+    background-color $accentColor
+    padding 0.4rem 0.8rem
+    border-radius 4px
+    transition background-color .1s ease
+    box-sizing border-box
+    border 1px solid darken($accentColor, 10%)
+    &:hover
+      background-color lighten($accentColor, 10%)
+    &:active
+      background-color darken($accentColor, 10%)
+    &:disabled, &[disabled]
+      cursor not-allowed

@@ -1,0 +1,60 @@
+{
+  "name": "vuepress-api-playground",
+  "version": "0.1.1",
+  "private": false,
+  "main": "/dist/vuepress-api-playground.umd.min.js",
+  "unpkg": "/dist/vuepress-api-playground.umd.min.js",
+  "jsdelivr": "/dist/vuepress-api-playground.umd.min.js",
+  "author": "Ilya Rodin",
+  "license": "MIT",
+  "files": [
+    "/dist/*",
+    "/src/*",
+    "/styles/*"
+  ],
+  "homepage": "https://rodindev.github.io/vuepress-api-playground/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rodindev/vuepress-api-playground.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rodindev/vuepress-api-playground/issues"
+  },
+  "description": "The vuepress-api-playground is a Vue.js component for showcasing and testing API use cases in VuePress documentation",
+  "keywords": [
+    "vue",
+    "vuepress",
+    "api",
+    "playground",
+    "testing",
+    "http",
+    "rest",
+    "component"
+  ],
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --target lib --name vuepress-api-playground src/main.js",
+    "prepublishOnly": "$npm_execpath build",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.15",
+    "@vue/cli-plugin-eslint": "~4.5.15",
+    "@vue/cli-service": "~4.5.15",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-template-compiler": "^2.6.11",
+    "vuepress": "^1.9.8"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.10"
+  }
+}
