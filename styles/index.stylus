@@ -7,8 +7,12 @@
     padding 1rem
     border 0.0625rem solid #eff3f8
     border-radius 4px
+  table
+    display table
+    width 100%
   input
-    cursor text
+    box-sizing border-box
+    width 100%
     height 2rem
     color lighten($textColor, 25%)
     display inline-block

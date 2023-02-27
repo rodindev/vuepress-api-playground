@@ -17,8 +17,7 @@
             <input
               @enter="request"
               v-model="item.value"
-              :type="item.type"
-              style="min-width: 21rem;" />
+              :type="item.type" />
           </td>
         </tr>
       </tbody>
