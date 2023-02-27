@@ -1,6 +1,6 @@
 {
   "name": "vuepress-api-playground",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "main": "/dist/vuepress-api-playground.umd.min.js",
   "unpkg": "/dist/vuepress-api-playground.umd.min.js",
