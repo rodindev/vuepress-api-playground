@@ -40,6 +40,18 @@ sidebar: auto
 
 <Demo componentName="examples-playground-get-method" />
 
+## Method GET with ``showURL`` Property
+
+### Code
+
+<SourceCode>
+<<< @/docs/.vuepress/components/examples/playground-get-url.vue
+</SourceCode>
+
+### Demo
+
+<Demo componentName="examples-playground-get-url" />
+
 ## Method POST
 
 ### Code
