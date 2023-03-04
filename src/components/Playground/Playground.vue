@@ -1,17 +1,40 @@
 <template>
   <div class="vp-playground">
-    <span class="vp-playground__method" v-if="showMethod">
+    <component :is="'h4'" class="vp-playground__method" v-if="showMethod">
       Method: <Badge type="warn" :text="method.toUpperCase()" vertical="unset" />
-    </span>
+    </component>
+    <div v-if="headers && Object.entries(headers).length > 0">
+      <component :is="'h4'">Headers:</component>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, id) in Object.keys(headers)" :key="`headers-${id}`">
+            <td>{{ item }}</td>
+            <td>
+              <input
+                @enter="request"
+                v-model="headers[item]"
+                type="text" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <component :is="'h4'">Data:</component>
     <table v-if="inputData && inputData.length > 0">
       <thead>
         <tr>
-          <th>Parameter</th>
+          <th>Key</th>
           <th>Value</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, id) in inputData" :key="id">
+        <tr v-for="(item, id) in inputData" :key="`data-${id}`">
           <td>{{ item.name }}</td>
           <td>
             <input
@@ -73,6 +96,13 @@ export default {
       required: false,
       default: false,
     },
+    headers: {
+      type: Object,
+      required: false,
+      default: () => ({
+        'Content-Type': 'application/json',
+      }),
+    },
   },
   mounted() {
     this.inputData = [...this.data];
@@ -117,9 +147,7 @@ export default {
       if (requestData) {
         if (method === 'post' || method === 'put' || method === 'patch') {
           data = Object.assign(data, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: this.headers,
             body: JSON.stringify(requestData),
           });
         } else {
