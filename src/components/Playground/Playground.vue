@@ -6,7 +6,7 @@
     <component :is="'h4'" class="vp-playground__url" v-if="showURL">
       URL: <code style="word-break: break-word;">{{ url }}</code>
     </component>
-    <div v-if="headers && Object.entries(headers).length > 0">
+    <div v-if="headers && Object.keys(headers).length > 0">
       <component :is="'h4'">Headers:</component>
       <table>
         <thead>
@@ -107,9 +107,7 @@ export default {
     headers: {
       type: Object,
       required: false,
-      default: () => ({
-        'Content-Type': 'application/json',
-      }),
+      default: null,
     },
   },
   mounted() {
@@ -154,8 +152,11 @@ export default {
       }
       if (requestData) {
         if (method === 'post' || method === 'put' || method === 'patch') {
+          const headers = this.headers || {
+            'Content-Type': 'application/json',
+          };
           data = Object.assign(data, {
-            headers: this.headers,
+            headers,
             body: JSON.stringify(requestData),
           });
         } else {
