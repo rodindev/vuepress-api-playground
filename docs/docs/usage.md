@@ -49,7 +49,10 @@ Check out our [Examples page](/examples/) for more examples of how to use our AP
 | ``url`` | String | true | The URL of the API endpoint. |
 | ``method`` | String | true | The HTTP method of the request (e.g. "get", "post", "put", "delete", etc.). |
 | ``data`` | Array | false | An array of objects that specify the key-value pairs to be sent with the request. Each object should have a ``name`` property (for the key), a ``value`` property (for the value), and a ``type`` property (for the type of input field to render). |
+| ``headers`` | Object | false | An object of headers to be sent along with the API request. Default is ``{ 'Content-Type': 'application/json' }``. |
 | ``showMethod`` | Boolean | false | Whether to display the HTTP method of the request in the component's header. Default is false. |
+| ``showURL`` | Boolean | false | Whether to display the URL of the request in the component's header. Default is false. |
+| ``headingTag`` | String | false | The HTML tag used for headings in the component. Default is "h4". |
 
 <!-- ## Source Code
 
