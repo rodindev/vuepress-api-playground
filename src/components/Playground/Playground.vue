@@ -3,6 +3,9 @@
     <component :is="'h4'" class="vp-playground__method" v-if="showMethod">
       Method: <Badge type="warn" :text="method.toUpperCase()" vertical="unset" />
     </component>
+    <component :is="'h4'" class="vp-playground__url" v-if="showURL">
+      URL: <code style="word-break: break-word;">{{ url }}</code>
+    </component>
     <div v-if="headers && Object.entries(headers).length > 0">
       <component :is="'h4'">Headers:</component>
       <table>
@@ -92,6 +95,11 @@ export default {
       required: false,
     },
     showMethod: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    showURL: {
       type: Boolean,
       required: false,
       default: false,
