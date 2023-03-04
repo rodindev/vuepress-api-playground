@@ -1,13 +1,13 @@
 <template>
   <div class="vp-playground">
-    <component :is="'h4'" class="vp-playground__method" v-if="showMethod">
+    <component :is="headingTag" class="vp-playground__method" v-if="showMethod">
       Method: <Badge type="warn" :text="method.toUpperCase()" vertical="unset" />
     </component>
-    <component :is="'h4'" class="vp-playground__url" v-if="showURL">
+    <component :is="headingTag" class="vp-playground__url" v-if="showURL">
       URL: <code style="word-break: break-word;">{{ url }}</code>
     </component>
     <div v-if="headers && Object.keys(headers).length > 0">
-      <component :is="'h4'">Headers:</component>
+      <component :is="headingTag">Headers:</component>
       <table>
         <thead>
           <tr>
@@ -28,7 +28,7 @@
         </tbody>
       </table>
     </div>
-    <component :is="'h4'">Data:</component>
+    <component :is="headingTag">Data:</component>
     <table v-if="inputData && inputData.length > 0">
       <thead>
         <tr>
@@ -103,6 +103,11 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    headingTag: {
+      type: String,
+      required: false,
+      default: 'h4',
     },
     headers: {
       type: Object,
