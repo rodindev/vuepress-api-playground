@@ -52,6 +52,18 @@ sidebar: auto
 
 <Demo componentName="examples-playground-post" />
 
+## Method POST with ``headers`` Property
+
+### Code
+
+<SourceCode>
+<<< @/docs/.vuepress/components/examples/playground-post-headers.vue
+</SourceCode>
+
+### Demo
+
+<Demo componentName="examples-playground-post-headers" />
+
 ## Method PUT
 
 ### Code
