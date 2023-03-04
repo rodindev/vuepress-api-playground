@@ -165,7 +165,9 @@ export default {
             body: JSON.stringify(requestData),
           });
         } else {
-          url = `${url}?${new URLSearchParams(requestData).toString()}`;
+          let searchParams = new URLSearchParams(requestData).toString();
+          if (searchParams !== '') searchParams = `?${searchParams}`;
+          url = `${url}${searchParams}`;
         }
       }
       return {
