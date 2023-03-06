@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vuepress-api-playground url="https://jsonplaceholder.typicode.com/posts/<id>" method="patch" :data="[
+    <component is="vuepress-api-playground" url="https://jsonplaceholder.typicode.com/posts/<id>" method="patch" :data="[
       {
         name: 'id',
         value: '1',

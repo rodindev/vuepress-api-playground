@@ -5,7 +5,7 @@
 To use the VuePress API Playground component in your documentation, you can add it to any Markdown file in your VuePress project. Here is an example of how to use the component:
 
 ``` vue
-  <vuepress-api-playground
+  <component is="vuepress-api-playground"
     url="https://jsonplaceholder.typicode.com/posts/"
     method="get"
     :data="[
@@ -18,12 +18,16 @@ To use the VuePress API Playground component in your documentation, you can add 
   />
 ```
 
+::: tip
+Use [Dynamic Components](https://vuejs.org/guide/essentials/component-basics.html#dynamic-components) to avoid parsing issues.
+:::
+
 In this example, we are using the ``vuepress-api-playground`` component to make a GET request to the ``https://jsonplaceholder.typicode.com/posts/`` URL, with a query parameter of ``userId=1``. You can customize the request by modifying the url, method, and data props of the component.
 
 This is an example of how to use a parameter in a URL:
 
 ``` vue
-  <vuepress-api-playground 
+  <component is="vuepress-api-playground" 
     url="https://jsonplaceholder.typicode.com/posts/<id>" 
     method="get" 
     :data="[

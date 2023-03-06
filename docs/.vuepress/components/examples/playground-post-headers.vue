@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vuepress-api-playground
+    <component is="vuepress-api-playground"
       url="https://jsonplaceholder.typicode.com/posts"
       method="post"
       :headers="{
