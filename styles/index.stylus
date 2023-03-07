@@ -5,7 +5,7 @@
   .vp-playground__response
     margin 1rem 0
     padding 1rem
-    border 0.0625rem solid #eff3f8
+    border 0.0625rem solid $borderColor
     border-radius 4px
   table
     display table
