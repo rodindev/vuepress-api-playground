@@ -1,10 +1,10 @@
 {
   "name": "vuepress-api-playground",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "private": false,
-  "main": "/dist/vuepress-api-playground.umd.min.js",
-  "unpkg": "/dist/vuepress-api-playground.umd.min.js",
-  "jsdelivr": "/dist/vuepress-api-playground.umd.min.js",
+  "main": "/dist/VuepressApiPlayground.umd.min.js",
+  "unpkg": "/dist/VuepressApiPlayground.umd.min.js",
+  "jsdelivr": "/dist/VuepressApiPlayground.umd.min.js",
   "author": "Ilya Rodin",
   "license": "MIT",
   "files": [
