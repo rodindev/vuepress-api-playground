@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name vuepress-api-playground src/main.js",
+    "build": "vue-cli-service build --target lib --name VuepressApiPlayground src/main.js",
     "prepublishOnly": "$npm_execpath build",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",

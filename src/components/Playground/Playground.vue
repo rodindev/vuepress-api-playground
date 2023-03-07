@@ -70,7 +70,7 @@
 <script>
 
 export default {
-  name: 'vuepress-api-playground',
+  name: 'VuepressApiPlayground',
   data() {
     return {
       loading: false,
