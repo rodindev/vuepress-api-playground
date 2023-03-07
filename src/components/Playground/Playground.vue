@@ -148,13 +148,18 @@ export default {
       let data = {
         method,
       };
-      const urlMatch = url.match(/<([a-zA-Z_]+)>/g);
-      if (urlMatch) {
-        urlMatch.forEach((element) => {
-          url = url.replace(element, requestData[element.slice(1, -1)]);
-          delete requestData[element.slice(1, -1)];
-        });
-      }
+      const urlMatchArray = [
+        url.match(/{([a-zA-Z_-]+)}/g),
+        url.match(/<([a-zA-Z_-]+)>/g),
+      ];
+      urlMatchArray.forEach((urlMatch) => {
+        if (urlMatch) {
+          urlMatch.forEach((element) => {
+            url = url.replace(element, requestData[element.slice(1, -1)]);
+            delete requestData[element.slice(1, -1)];
+          });
+        }
+      });
       if (requestData) {
         if (method === 'post' || method === 'put' || method === 'patch') {
           const headers = this.headers || {
