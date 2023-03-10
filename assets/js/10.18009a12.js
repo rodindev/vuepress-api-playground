@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[10],{292:function(e,t,n){"use strict";n.r(t);var s=n(10),u=Object(s.a)({},(function(){var e=this._self._c;return e("div",[e("VuepressApiPlayground",{attrs:{url:"https://jsonplaceholder.typicode.com/posts/",method:"get",data:[{name:"userId",value:"1",type:"number"}]}})],1)}),[],!1,null,null,null);t.default=u.exports}}]);
