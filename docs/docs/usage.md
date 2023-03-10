@@ -41,7 +41,7 @@ In this example, the URL ``https://jsonplaceholder.typicode.com/posts/{id}`` inc
 When the component is rendered, it will make a GET request to the URL ``https://jsonplaceholder.typicode.com/posts/1``.
 
 ::: tip
-Use ``<id>`` if you are using ``vuepress-api-playground`` version **< 0.3.0**.
+Use ``<id>`` if you are using ``vuepress-api-playground`` version **< 0.3.x**.
 :::
 
 Check out our [Examples page](/examples/) for more examples of how to use our API.

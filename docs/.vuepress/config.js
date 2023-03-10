@@ -8,6 +8,7 @@ module.exports = {
   description: description,
   head: [
     ['link', { rel: 'icon', href: `/favicon.ico?v=${assetsVersion}` }],
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1' }],
     ['meta', { name: 'theme-color', content: '#349adf' }],
     ['meta', { property: 'og:title', content: 'Vuepress API Playground' }],
     ['meta', { property: 'og:type', content: 'article' }],
@@ -57,5 +58,11 @@ module.exports = {
   plugins: [
     '@vuepress/plugin-back-to-top',
     '@vuepress/plugin-medium-zoom',
+    [
+      'vuepress-plugin-google-tag-manager',
+      {
+        'gtm': 'GTM-WZW8CCN',
+      },
+    ],
   ]
 }
