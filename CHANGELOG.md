@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.0](https://github.com/rodindev/vue-api-playground/compare/v1.0.0...v2.0.0) (2026-04-14)
+
+### Features
+
+* v2 component library — decompose Playground, add cURL import/export ([2835eeb](https://github.com/rodindev/vue-api-playground/commit/2835eebece56c153cda2a1a490256b41e9d1370b))
+
+### Chores
+
+* rename repo to vue-api-playground ([a1652e0](https://github.com/rodindev/vue-api-playground/commit/a1652e07dfe14e7de4e0105a2406cb4afa9f589a))
+
 ## 1.0.0
 
 ### Breaking Changes
