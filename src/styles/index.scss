@@ -1,0 +1,236 @@
+// Vue API Playground — Plug & Play styles
+//
+// CSS variable cascade (highest priority → lowest):
+// 1. --vap-*         user override
+// 2. --vp-c-*        VitePress theme
+// 3. hardcoded       standalone fallback
+
+.vap-playground {
+  --_brand: var(--vap-brand, var(--vp-c-brand-1, #3eaf7c));
+  --_text: var(--vap-text, var(--vp-c-text-1, #2c3e50));
+  --_text-light: var(--vap-text-light, var(--vp-c-text-2, #476582));
+  --_border: var(--vap-border, var(--vp-c-border, #eaecef));
+  --_bg: var(--vap-bg, var(--vp-c-bg, #ffffff));
+  --_bg-soft: var(--vap-bg-soft, var(--vp-c-bg-soft, #f3f4f6));
+  --_code-bg: var(--vap-code-bg, var(--vp-code-block-bg, #1e1e1e));
+  --_code-text: var(--vap-code-text, var(--vp-code-block-color, #d4d4d4));
+  --_success: var(--vap-success, var(--vp-c-green-1, #42b983));
+  --_danger: var(--vap-danger, var(--vp-c-red-1, #cc0000));
+  --_warning: var(--vap-warning, var(--vp-c-yellow-1, #e7c000));
+  --_info: var(--vap-info, var(--vp-c-brand-1, #3eaf7c));
+  --_radius: var(--vap-radius, 6px);
+  --_font-size: var(--vap-font-size, 0.9rem);
+
+  font-size: var(--_font-size);
+  color: var(--_text);
+}
+
+// Spinner
+.vap-spinner {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.4em;
+  vertical-align: -0.1em;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: vap-spin 0.6s linear infinite;
+}
+
+@keyframes vap-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Badge
+.vap-badge {
+  display: inline-block;
+  padding: 0.125em 0.5em;
+  border-radius: var(--_radius);
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1.4;
+  vertical-align: middle;
+  color: #fff;
+
+  &--success {
+    background-color: var(--_success);
+  }
+
+  &--danger {
+    background-color: var(--_danger);
+  }
+
+  &--warning {
+    background-color: var(--_warning);
+  }
+
+  &--info {
+    background-color: var(--_info);
+  }
+}
+
+// Method & URL headings
+.vap-playground__method,
+.vap-playground__url {
+  display: block;
+  margin-top: 1rem;
+
+  code {
+    word-break: break-all;
+  }
+}
+
+// Tables
+.vap-playground table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+
+  th,
+  td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--_border);
+    text-align: left;
+  }
+
+  th {
+    background: var(--_bg-soft);
+    font-weight: 600;
+  }
+}
+
+// Inputs
+.vap-playground input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 2rem;
+  padding: 0 0.5rem;
+  color: var(--_text);
+  background: var(--_bg);
+  font-size: var(--_font-size);
+  line-height: 2rem;
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--_brand);
+  }
+}
+
+// Primary button (Execute)
+.vap-playground > button {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #fff;
+  background-color: var(--_brand);
+  border: 1px solid var(--_brand);
+  border-radius: var(--_radius);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+// Response area
+.vap-playground__response {
+  margin: 1rem 0;
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  overflow: hidden;
+}
+
+.vap-playground__response-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--_bg-soft);
+  border-bottom: 1px solid var(--_border);
+  font-weight: 500;
+}
+
+.vap-playground__time {
+  color: var(--_text-light);
+  font-size: 0.85em;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+// Copy button
+.vap-playground__copy {
+  margin-left: auto;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--_text-light);
+  background: var(--_bg);
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    color: var(--_text);
+    border-color: var(--_text-light);
+  }
+}
+
+// Response headers
+.vap-playground__headers {
+  border-bottom: 1px solid var(--_border);
+
+  summary {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--_text-light);
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      color: var(--_text);
+    }
+  }
+
+  .vap-playground__code {
+    border-radius: 0;
+  }
+}
+
+// Code block
+.vap-playground__code {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--_code-text);
+  background: var(--_code-bg);
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  }
+}

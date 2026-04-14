@@ -1,17 +1,22 @@
 ---
-home: true
-heroImage: /img/logo.png
-tagline: 
-actionText: Quick Start →
-actionLink: /docs/
+layout: home
+
+hero:
+  name: Vue API Playground
+  tagline: Interactive API testing component for Vue 3
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /guide/
+    - theme: alt
+      text: Examples
+      link: /examples/
+
 features:
-- title: Simple Usage
-  details: You simply need to install the component and add it to your VuePress documentation
-- title: Full API Method Support
-  details: The component supports all major API methods, including GET, POST, PUT, DELETE, and more
-- title: Easy API Use Case Display
-  details: With the component, you can easily display use cases for your API methods in your VuePress documentation
+  - title: Plug & Play
+    details: Automatically inherits colors and styles from VitePress or any Vue 3 app theme
+  - title: Full HTTP Support
+    details: GET, POST, PUT, PATCH, DELETE — with URL path parameters, query strings, and JSON body
+  - title: Zero Dependencies
+    details: Pure Vue 3 component with TypeScript support. No runtime dependencies
 ---
-::: slot footer
-MIT Licensed | Copyright © {{ new Date().getFullYear() }} [Ilya Rodin](https://rodin.dev)
-:::

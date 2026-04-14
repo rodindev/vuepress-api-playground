@@ -1,16 +1,41 @@
 {
-  "name": "vuepress-api-playground",
-  "version": "0.3.1",
-  "private": false,
-  "main": "/dist/VuepressApiPlayground.umd.min.js",
-  "unpkg": "/dist/VuepressApiPlayground.umd.min.js",
-  "jsdelivr": "/dist/VuepressApiPlayground.umd.min.js",
-  "author": "Ilya Rodin",
+  "name": "vue-api-playground",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Interactive API playground component for Vue 3. Plug-and-play with VitePress or any Vue 3 app — automatically inherits host theme styles.",
+  "author": "",
   "license": "MIT",
+  "main": "./dist/vue-api-playground.cjs",
+  "module": "./dist/vue-api-playground.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue-api-playground.js",
+      "require": "./dist/vue-api-playground.cjs"
+    },
+    "./styles": "./dist/vue-api-playground.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
   "files": [
-    "/dist/*",
-    "/src/*",
-    "/styles/*"
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "vitepress",
+    "interactive",
+    "api",
+    "playground",
+    "http",
+    "rest",
+    "component",
+    "documentation"
   ],
   "homepage": "https://rodindev.github.io/vuepress-api-playground/",
   "repository": {
@@ -20,42 +45,44 @@
   "bugs": {
     "url": "https://github.com/rodindev/vuepress-api-playground/issues"
   },
-  "description": "The VuePress API Playground is a Vue.js component for showcasing and testing API use cases in VuePress documentation",
-  "keywords": [
-    "vue",
-    "vuepress",
-    "api",
-    "playground",
-    "testing",
-    "http",
-    "rest",
-    "component"
-  ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name VuepressApiPlayground src/main.js",
-    "prepublishOnly": "$npm_execpath build",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "core-js": "^3.6.5"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.15",
-    "@vue/cli-plugin-eslint": "~4.5.15",
-    "@vue/cli-service": "~4.5.15",
-    "@vue/eslint-config-airbnb": "^5.0.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11",
-    "vuepress": "^1.9.8",
-    "vuepress-plugin-google-tag-manager": "^0.0.5"
+    "dev": "vitepress dev docs",
+    "build": "vite build",
+    "preview": "vitepress preview docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "prepublishOnly": "npm run build",
+    "release": "release-it",
+    "release:dry": "release-it --dry-run"
   },
   "peerDependencies": {
-    "vue": "^2.6.10"
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "@vitejs/plugin-vue": "^5.2.0",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "jsdom": "^26.0.0",
+    "prettier": "^3.4.0",
+    "release-it": "^18.0.0",
+    "sass-embedded": "^1.83.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.18.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.3.0",
+    "vitepress": "^1.5.0",
+    "vitest": "^3.0.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^2.2.0"
   }
 }
