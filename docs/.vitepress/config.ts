@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 
-const siteUrl = 'https://rodindev.github.io/vuepress-api-playground/'
+const siteUrl = 'https://rodindev.github.io/vue-api-playground/'
 const title = 'Vue API Playground'
 const description =
   'Interactive API playground component for Vue 3. Plug-and-play with VitePress or any Vue 3 app.'
@@ -8,7 +8,7 @@ const description =
 export default defineConfig({
   title,
   description,
-  base: '/vuepress-api-playground/',
+  base: '/vue-api-playground/',
 
   sitemap: {
     hostname: siteUrl,
@@ -65,7 +65,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/rodindev/vuepress-api-playground',
+        link: 'https://github.com/rodindev/vue-api-playground',
       },
     ],
 

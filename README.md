@@ -1,8 +1,8 @@
 # Vue API Playground
 
 [![npm version](https://img.shields.io/npm/v/vue-api-playground)](https://www.npmjs.com/package/vue-api-playground)
-[![CI](https://github.com/rodindev/vuepress-api-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/rodindev/vuepress-api-playground/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/npm/l/vue-api-playground)](https://github.com/rodindev/vuepress-api-playground/blob/main/LICENSE)
+[![CI](https://github.com/rodindev/vue-api-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/rodindev/vue-api-playground/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/npm/l/vue-api-playground)](https://github.com/rodindev/vue-api-playground/blob/main/LICENSE)
 
 Interactive API playground component for Vue 3. Plug-and-play with VitePress or any Vue 3 app — automatically inherits host theme styles.
 
@@ -114,13 +114,13 @@ For dark mode, override under your dark class:
 }
 ```
 
-When no `--vap-*` variables are set, the component falls back to VitePress theme variables, then hardcoded defaults. See the [full variable reference](https://rodindev.github.io/vuepress-api-playground/guide/customization) for all 14 customizable properties.
+When no `--vap-*` variables are set, the component falls back to VitePress theme variables, then hardcoded defaults. See the [full variable reference](https://rodindev.github.io/vue-api-playground/guide/customization) for all 14 customizable properties.
 
 You can also skip the default styles entirely and write your own — the component renders semantic HTML with `vap-` prefixed classes.
 
 ## Documentation
 
-Full documentation with live examples: [rodindev.github.io/vuepress-api-playground](https://rodindev.github.io/vuepress-api-playground/)
+Full documentation with live examples: [rodindev.github.io/vue-api-playground](https://rodindev.github.io/vue-api-playground/)
 
 ## Contributing
 

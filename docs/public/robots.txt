@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rodindev.github.io/vuepress-api-playground/sitemap.xml
+Sitemap: https://rodindev.github.io/vue-api-playground/sitemap.xml

@@ -5,8 +5,8 @@ Thanks for your interest in contributing to Vue API Playground!
 ## Development Setup
 
 ```bash
-git clone https://github.com/rodindev/vuepress-api-playground.git
-cd vuepress-api-playground
+git clone https://github.com/rodindev/vue-api-playground.git
+cd vue-api-playground
 npm install
 ```
 
