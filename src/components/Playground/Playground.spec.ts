@@ -11,6 +11,10 @@ function mockFetch(body: unknown, status = 200, headers?: Record<string, string>
   })
 }
 
+function findExecuteButton(wrapper: ReturnType<typeof mount>) {
+  return wrapper.find('[aria-label="Execute request"]')
+}
+
 describe('Playground', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', mockFetch({ success: true }))
@@ -26,7 +30,7 @@ describe('Playground', () => {
       props: { url: 'https://api.example.com/posts', method: 'get' },
     })
     expect(wrapper.find('.vap-playground').exists()).toBe(true)
-    expect(wrapper.find('button').text()).toBe('Execute')
+    expect(findExecuteButton(wrapper).text()).toBe('Execute')
   })
 
   it('hides method and URL by default', () => {
@@ -75,10 +79,10 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    const inputs = wrapper.findAll('input')
+    const inputs = wrapper.findAll('.vap-input[type]')
     expect(inputs.length).toBe(2)
-    expect(inputs[0]!.element.type).toBe('number')
-    expect(inputs[1]!.element.type).toBe('text')
+    expect((inputs[0]!.element as HTMLInputElement).type).toBe('number')
+    expect((inputs[1]!.element as HTMLInputElement).type).toBe('text')
   })
 
   it('renders header inputs when headers are provided', async () => {
@@ -90,7 +94,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    const headerInputs = wrapper.findAll('input')
+    const headerInputs = wrapper.findAll('input.vap-input[aria-label^="Header"]')
     expect(headerInputs.length).toBe(1)
   })
 
@@ -106,7 +110,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url, init] = fetchMock.mock.calls[0]!
@@ -130,7 +134,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url, init] = fetchMock.mock.calls[0]!
@@ -154,7 +158,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url] = fetchMock.mock.calls[0]!
@@ -173,7 +177,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url] = fetchMock.mock.calls[0]!
@@ -193,12 +197,12 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
-    await vi.waitFor(() => expect(wrapper.find('.vap-playground__response').exists()).toBe(true))
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
 
     expect(wrapper.find('.vap-badge--success').text()).toBe('200')
-    expect(wrapper.find('.vap-playground__code').text()).toContain('"result"')
-    expect(wrapper.find('.vap-playground__time').text()).toContain('ms')
+    expect(wrapper.find('.vap-code').text()).toContain('"result"')
+    expect(wrapper.find('.vap-response__time').text()).toContain('ms')
   })
 
   it('shows error badge for 4xx/5xx', async () => {
@@ -207,7 +211,7 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(wrapper.find('.vap-badge--danger').exists()).toBe(true))
 
     expect(wrapper.find('.vap-badge--danger').text()).toBe('404')
@@ -219,10 +223,10 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
-    await vi.waitFor(() => expect(wrapper.find('.vap-playground__response').exists()).toBe(true))
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
 
-    expect(wrapper.find('.vap-playground__code').text()).toContain('Failed to fetch')
+    expect(wrapper.find('.vap-code').text()).toContain('Failed to fetch')
   })
 
   it('handles non-JSON response as text', async () => {
@@ -238,9 +242,9 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() =>
-      expect(wrapper.find('.vap-playground__code').text()).toContain('Plain text response')
+      expect(wrapper.find('.vap-code').text()).toContain('Plain text response')
     )
   })
 
@@ -255,11 +259,12 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('button').attributes('disabled')).toBeDefined()
-    expect(wrapper.find('button').text()).toBe('Loading')
+    const btn = findExecuteButton(wrapper)
+    expect(btn.attributes('disabled')).toBeDefined()
+    expect(btn.text()).toBe('Loading')
     expect(wrapper.find('.vap-spinner').exists()).toBe(true)
   })
 
@@ -269,11 +274,12 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
-    await vi.waitFor(() => expect(wrapper.find('.vap-playground__response').exists()).toBe(true))
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
 
-    expect(wrapper.find('.vap-playground__copy').exists()).toBe(true)
-    expect(wrapper.find('.vap-playground__copy').text()).toBe('Copy')
+    const copyBtn = wrapper.find('[aria-label="Copy response"]')
+    expect(copyBtn.exists()).toBe(true)
+    expect(copyBtn.text()).toBe('Copy')
   })
 
   it('shows response headers in collapsible section', async () => {
@@ -288,10 +294,10 @@ describe('Playground', () => {
     const wrapper = mount(Playground, {
       props: { url: 'https://api.example.com', method: 'get' },
     })
-    await wrapper.find('button').trigger('click')
-    await vi.waitFor(() => expect(wrapper.find('.vap-playground__headers').exists()).toBe(true))
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response__headers').exists()).toBe(true))
 
-    expect(wrapper.find('.vap-playground__headers summary').text()).toBe('Response Headers')
+    expect(wrapper.find('.vap-response__headers summary').text()).toBe('Response Headers')
   })
 
   it('has accessible aria labels on inputs', async () => {
@@ -304,9 +310,9 @@ describe('Playground', () => {
     })
     await wrapper.vm.$nextTick()
 
-    const input = wrapper.find('input')
-    expect(input.attributes('aria-label')).toBe('userId')
-    expect(wrapper.find('button').attributes('aria-label')).toBe('Execute request')
+    const input = wrapper.find('[aria-label="userId"]')
+    expect(input.exists()).toBe(true)
+    expect(findExecuteButton(wrapper).attributes('aria-label')).toBe('Execute request')
   })
 
   it('applies correct badge color per HTTP method', () => {
@@ -342,7 +348,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url, init] = fetchMock.mock.calls[0]!
@@ -366,7 +372,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [, init] = fetchMock.mock.calls[0]!
@@ -378,7 +384,7 @@ describe('Playground', () => {
       props: { url: 'https://api.example.com', method: 'get' },
     })
     expect(wrapper.text()).not.toContain('Data:')
-    expect(wrapper.findAll('table').length).toBe(0)
+    expect(wrapper.findAll('.vap-table').length).toBe(0)
   })
 
   it('skips empty values in request data', async () => {
@@ -396,7 +402,7 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url] = fetchMock.mock.calls[0]!
@@ -419,10 +425,36 @@ describe('Playground', () => {
       },
     })
     await wrapper.vm.$nextTick()
-    await wrapper.find('button').trigger('click')
+    await findExecuteButton(wrapper).trigger('click')
     await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
 
     const [url] = fetchMock.mock.calls[0]!
     expect(url).toBe('https://api.example.com/users/5/posts?status=published')
+  })
+
+  it('shows cURL button in response after executing', async () => {
+    vi.stubGlobal('fetch', mockFetch({ data: 'test' }, 200))
+
+    const wrapper = mount(Playground, {
+      props: { url: 'https://api.example.com', method: 'get' },
+    })
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
+
+    const curlBtn = wrapper.find('[aria-label="Copy as cURL"]')
+    expect(curlBtn.exists()).toBe(true)
+    expect(curlBtn.text()).toBe('cURL')
+  })
+
+  it('shows response payload size', async () => {
+    vi.stubGlobal('fetch', mockFetch({ data: 'test' }, 200))
+
+    const wrapper = mount(Playground, {
+      props: { url: 'https://api.example.com', method: 'get' },
+    })
+    await findExecuteButton(wrapper).trigger('click')
+    await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
+
+    expect(wrapper.find('.vap-response__size').exists()).toBe(true)
   })
 })

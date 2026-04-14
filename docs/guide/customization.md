@@ -114,29 +114,41 @@ If CSS variables aren't enough, you can target the component's CSS classes direc
 
 ### Class reference
 
-| Class                           | Element                      |
-| ------------------------------- | ---------------------------- |
-| `.vap-playground`               | Root container               |
-| `.vap-playground__method`       | Method badge heading         |
-| `.vap-playground__url`          | URL display heading          |
-| `.vap-playground__response`     | Response wrapper             |
-| `.vap-playground__response-bar` | Status + time + copy bar     |
-| `.vap-playground__status`       | Status text + badge          |
-| `.vap-playground__time`         | Response time display        |
-| `.vap-playground__copy`         | Copy button                  |
-| `.vap-playground__headers`      | Response headers `<details>` |
-| `.vap-playground__code`         | Code/response `<pre>` block  |
-| `.vap-badge`                    | Badge base class             |
-| `.vap-badge--success`           | 2xx status badge             |
-| `.vap-badge--danger`            | 4xx/5xx status badge         |
-| `.vap-badge--warning`           | PUT/PATCH method badge       |
-| `.vap-badge--info`              | GET method badge             |
-| `.vap-spinner`                  | Loading spinner              |
+| Class                     | Element                        |
+| ------------------------- | ------------------------------ |
+| `.vap-playground`         | Playground root container      |
+| `.vap-playground__method` | Playground method heading      |
+| `.vap-playground__url`    | Playground URL heading         |
+| `.vap-request`            | ApiRequest root container      |
+| `.vap-request__method`    | ApiRequest method heading      |
+| `.vap-request__import`    | cURL import `<details>`        |
+| `.vap-response`           | ApiResponse root / wrapper     |
+| `.vap-response__bar`      | Status + time + buttons bar    |
+| `.vap-response__status`   | Status text + badge            |
+| `.vap-response__time`     | Response time display          |
+| `.vap-response__size`     | Response payload size          |
+| `.vap-response__headers`  | Response headers `<details>`   |
+| `.vap-table`              | Shared table (headers, data)   |
+| `.vap-input`              | Shared input fields            |
+| `.vap-btn`                | Button base class              |
+| `.vap-btn--primary`       | Execute button                 |
+| `.vap-btn--secondary`     | Copy / cURL buttons            |
+| `.vap-code`               | Code/response `<pre>` block    |
+| `.vap-badge`              | Badge base class               |
+| `.vap-badge--success`     | 2xx status / POST badge        |
+| `.vap-badge--danger`      | 4xx/5xx status / DELETE badge  |
+| `.vap-badge--warning`     | PUT/PATCH method badge         |
+| `.vap-badge--info`        | GET method badge               |
+| `.vap-spinner`            | Loading spinner                |
+| `.vap-json-key`           | JSON key in highlighted output |
+| `.vap-json-string`        | JSON string value              |
+| `.vap-json-number`        | JSON number value              |
+| `.vap-json-bool`          | JSON boolean/null value        |
 
 ### Example: custom button style
 
 ```css
-.vap-playground > button {
+.vap-btn--primary {
   background-color: #6366f1;
   border-color: #6366f1;
   border-radius: 9999px;

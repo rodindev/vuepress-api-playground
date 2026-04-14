@@ -5,7 +5,7 @@
 // 2. --vp-c-*        VitePress theme
 // 3. hardcoded       standalone fallback
 
-.vap-playground {
+@mixin vap-vars {
   --_brand: var(--vap-brand, var(--vp-c-brand-1, #3eaf7c));
   --_text: var(--vap-text, var(--vp-c-text-1, #2c3e50));
   --_text-light: var(--vap-text-light, var(--vp-c-text-2, #476582));
@@ -23,6 +23,19 @@
 
   font-size: var(--_font-size);
   color: var(--_text);
+}
+
+// Component roots
+.vap-playground {
+  @include vap-vars;
+}
+
+.vap-request {
+  @include vap-vars;
+}
+
+.vap-response {
+  @include vap-vars;
 }
 
 // Spinner
@@ -74,7 +87,8 @@
 
 // Method & URL headings
 .vap-playground__method,
-.vap-playground__url {
+.vap-playground__url,
+.vap-request__method {
   display: block;
   margin-top: 1rem;
 
@@ -83,8 +97,8 @@
   }
 }
 
-// Tables
-.vap-playground table {
+// Shared table
+.vap-table {
   display: table;
   width: 100%;
   border-collapse: collapse;
@@ -103,8 +117,8 @@
   }
 }
 
-// Inputs
-.vap-playground input {
+// Shared input
+.vap-input {
   box-sizing: border-box;
   width: 100%;
   height: 2rem;
@@ -123,84 +137,137 @@
   }
 }
 
-// Primary button (Execute)
-.vap-playground > button {
+// Shared buttons
+.vap-btn {
   display: inline-flex;
   align-items: center;
-  margin-top: 0.5rem;
-  padding: 0.4rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
-  color: #fff;
-  background-color: var(--_brand);
-  border: 1px solid var(--_brand);
   border-radius: var(--_radius);
   cursor: pointer;
-  transition: opacity 0.15s ease;
 
-  &:hover {
-    opacity: 0.8;
+  &--primary {
+    margin-top: 0.5rem;
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #fff;
+    background-color: var(--_brand);
+    border: 1px solid var(--_brand);
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
-  &:active {
-    opacity: 0.6;
-  }
+  &--secondary {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--_text-light);
+    background: var(--_bg);
+    border: 1px solid var(--_border);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    &:hover {
+      color: var(--_text);
+      border-color: var(--_text-light);
+    }
   }
 }
 
+// cURL import
+.vap-request__import {
+  margin-bottom: 0.5rem;
+
+  summary {
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    color: var(--_text-light);
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      color: var(--_text);
+    }
+  }
+}
+
+.vap-request__import-body {
+  margin-top: 0.25rem;
+}
+
+.vap-request__import-textarea {
+  height: auto;
+  min-height: 3.5rem;
+  line-height: 1.4;
+  padding: 0.5rem;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.vap-request__import-error {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--_danger);
+}
+
+.vap-request__import-warning {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--_warning);
+}
+
 // Response area
-.vap-playground__response {
+.vap-response {
   margin: 1rem 0;
   border: 1px solid var(--_border);
   border-radius: var(--_radius);
   overflow: hidden;
 }
 
-.vap-playground__response-bar {
+.vap-response__bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
   background: var(--_bg-soft);
   border-bottom: 1px solid var(--_border);
   font-weight: 500;
+
+  .vap-btn:first-of-type {
+    margin-left: auto;
+  }
 }
 
-.vap-playground__time {
+.vap-response__time {
   color: var(--_text-light);
   font-size: 0.85em;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
 
-// Copy button
-.vap-playground__copy {
-  margin-left: auto;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+.vap-response__size {
   color: var(--_text-light);
-  background: var(--_bg);
-  border: 1px solid var(--_border);
-  border-radius: var(--_radius);
-  cursor: pointer;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-
-  &:hover {
-    color: var(--_text);
-    border-color: var(--_text-light);
-  }
+  font-size: 0.85em;
+  font-weight: 400;
 }
 
 // Response headers
-.vap-playground__headers {
+.vap-response__headers {
   border-bottom: 1px solid var(--_border);
 
   summary {
@@ -215,13 +282,13 @@
     }
   }
 
-  .vap-playground__code {
+  .vap-code {
     border-radius: 0;
   }
 }
 
 // Code block
-.vap-playground__code {
+.vap-code {
   margin: 0;
   padding: 1rem;
   overflow-x: auto;
@@ -232,5 +299,36 @@
 
   code {
     font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  }
+}
+
+// JSON syntax highlighting
+.vap-json-key {
+  color: var(--vap-json-key, #9cdcfe);
+}
+
+.vap-json-string {
+  color: var(--vap-json-string, #ce9178);
+}
+
+.vap-json-number {
+  color: var(--vap-json-number, #b5cea8);
+}
+
+.vap-json-bool {
+  color: var(--vap-json-bool, #569cd6);
+}
+
+// Playground-specific (orchestrator layout)
+.vap-playground {
+  // When composed inside Playground, remove double margins
+  .vap-response {
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+
+  // Hide the cURL import in Playground (it builds its own requests)
+  .vap-request__import {
+    display: none;
   }
 }
