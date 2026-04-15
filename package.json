@@ -1,6 +1,6 @@
 {
   "name": "vue-api-playground",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "Interactive API playground component for Vue 3. Plug-and-play with VitePress or any Vue 3 app — automatically inherits host theme styles.",
   "author": "",

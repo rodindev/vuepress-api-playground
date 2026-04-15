@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.1.1](https://github.com/rodindev/vue-api-playground/compare/v2.1.0...v2.1.1) (2026-04-15)
+
+### Chores
+
+* bump engines.node to >=22 ([c795dc5](https://github.com/rodindev/vue-api-playground/commit/c795dc551a15ca582f51f3d78f27b668bc1c65c0))
+
+### CI
+
+* bump checkout/setup-node to v5 and Node to 22 ([35445f4](https://github.com/rodindev/vue-api-playground/commit/35445f4c1bac474ed6baa2cec1ef9c672318c6e2))
+
 ## [2.1.0](https://github.com/rodindev/vue-api-playground/compare/v2.0.0...v2.1.0) (2026-04-15)
 
 ### Features
