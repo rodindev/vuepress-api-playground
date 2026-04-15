@@ -1,4 +1,10 @@
 import { defineConfig } from 'vitepress'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+
+const pkg = JSON.parse(
+  readFileSync(fileURLToPath(new URL('../../package.json', import.meta.url)), 'utf8')
+) as { version: string }
 
 const siteUrl = 'https://rodindev.github.io/vue-api-playground/'
 const title = 'Vue API Playground'
@@ -15,7 +21,7 @@ export default defineConfig({
   },
 
   head: [
-    ['meta', { name: 'theme-color', content: '#3eaf7c' }],
+    ['meta', { name: 'theme-color', content: '#2563eb' }],
     ['meta', { name: 'author', content: 'vue-api-playground contributors' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: title }],
@@ -40,6 +46,23 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/' },
       { text: 'Examples', link: '/examples/' },
+      {
+        text: `v${pkg.version}`,
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/rodindev/vue-api-playground/blob/main/CHANGELOG.md',
+          },
+          {
+            text: 'Releases',
+            link: 'https://github.com/rodindev/vue-api-playground/releases',
+          },
+          {
+            text: 'npm',
+            link: 'https://www.npmjs.com/package/vue-api-playground',
+          },
+        ],
+      },
     ],
 
     sidebar: {
