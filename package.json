@@ -14,7 +14,9 @@
       "import": "./dist/vue-api-playground.js",
       "require": "./dist/vue-api-playground.cjs"
     },
-    "./styles": "./dist/vue-api-playground.css"
+    "./styles": "./dist/vue-api-playground.css",
+    "./styles/vars": "./dist/_vars.scss",
+    "./styles/_vars.scss": "./dist/_vars.scss"
   },
   "sideEffects": [
     "*.css"
@@ -47,7 +49,7 @@
   },
   "scripts": {
     "dev": "vitepress dev docs",
-    "build": "vite build",
+    "build": "vite build && node -e \"require('node:fs').copyFileSync('src/styles/_vars.scss','dist/_vars.scss')\"",
     "preview": "vitepress preview docs",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

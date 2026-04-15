@@ -1,17 +1,19 @@
 // Vue API Playground — Plug & Play styles
 //
 // CSS variable cascade (highest priority → lowest):
-// 1. --vap-*         user override
+// 1. --vap-*         user override (see _vars.scss for the full surface)
 // 2. --vp-c-*        VitePress theme
 // 3. hardcoded       standalone fallback
 
+@use 'vars';
+
 @mixin vap-vars {
   --_brand: var(--vap-brand, var(--vp-c-brand-1, #3eaf7c));
-  --_text: var(--vap-text, var(--vp-c-text-1, #2c3e50));
-  --_text-light: var(--vap-text-light, var(--vp-c-text-2, #476582));
-  --_border: var(--vap-border, var(--vp-c-border, #eaecef));
+  --_text: var(--vap-text, var(--vap-text-1, var(--vp-c-text-1, #2c3e50)));
+  --_text-light: var(--vap-text-light, var(--vap-text-2, var(--vp-c-text-2, #476582)));
+  --_border: var(--vap-border, var(--vap-surface-border, var(--vp-c-border, #eaecef)));
   --_bg: var(--vap-bg, var(--vp-c-bg, #ffffff));
-  --_bg-soft: var(--vap-bg-soft, var(--vp-c-bg-soft, #f3f4f6));
+  --_bg-soft: var(--vap-bg-soft, var(--vap-surface, var(--vp-c-bg-soft, #f3f4f6)));
   --_code-bg: var(--vap-code-bg, var(--vp-code-block-bg, #1e1e1e));
   --_code-text: var(--vap-code-text, var(--vp-code-block-color, #d4d4d4));
   --_success: var(--vap-success, var(--vp-c-green-1, #42b983));
@@ -20,9 +22,21 @@
   --_info: var(--vap-info, var(--vp-c-brand-1, #3eaf7c));
   --_radius: var(--vap-radius, 6px);
   --_font-size: var(--vap-font-size, 0.9rem);
+  --_font-ui: var(--vap-font-ui, system-ui, sans-serif);
+  --_font-mono: var(
+    --vap-font-mono,
+    ui-monospace,
+    SFMono-Regular,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace
+  );
+  --_focus-ring: var(--vap-focus-ring, var(--vp-c-brand-1, #3eaf7c));
 
   font-size: var(--_font-size);
   color: var(--_text);
+  font-family: var(--_font-ui);
 }
 
 // Component roots
@@ -85,15 +99,56 @@
   }
 }
 
+// Method-specific coloring — wins over the generic badge color because of source
+// order. Users can theme each method individually via --vap-method-*.
+.vap-method--get {
+  background-color: var(--vap-method-get, var(--_info));
+}
+.vap-method--post {
+  background-color: var(--vap-method-post, var(--_success));
+}
+.vap-method--put {
+  background-color: var(--vap-method-put, var(--_warning));
+}
+.vap-method--patch {
+  background-color: var(--vap-method-patch, var(--_warning));
+}
+.vap-method--delete {
+  background-color: var(--vap-method-delete, var(--_danger));
+}
+.vap-method--head {
+  background-color: var(--vap-method-head, var(--_text-light));
+}
+.vap-method--options {
+  background-color: var(--vap-method-options, var(--_text-light));
+}
+.vap-method--trace {
+  background-color: var(--vap-method-trace, var(--_text-light));
+}
+
 // Method & URL headings
 .vap-playground__method,
-.vap-playground__url,
 .vap-request__method {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 1rem;
+}
+
+.vap-playground__url {
   display: block;
   margin-top: 1rem;
 
   code {
     word-break: break-all;
+  }
+}
+
+.vap-request__server {
+  margin-bottom: 0.5rem;
+
+  select {
+    width: 100%;
   }
 }
 
@@ -133,7 +188,7 @@
   transition: border-color 0.2s ease;
 
   &:focus {
-    border-color: var(--_brand);
+    border-color: var(--_focus-ring);
   }
 }
 
@@ -214,7 +269,7 @@
   line-height: 1.4;
   padding: 0.5rem;
   resize: vertical;
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-family: var(--_font-mono);
   font-size: 0.8rem;
 }
 
@@ -253,6 +308,12 @@
   }
 }
 
+.vap-response__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
 .vap-response__time {
   color: var(--_text-light);
   font-size: 0.85em;
@@ -264,6 +325,20 @@
   color: var(--_text-light);
   font-size: 0.85em;
   font-weight: 400;
+}
+
+.vap-response__streaming {
+  color: var(--_text-light);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+.vap-response__hint {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--_text);
+  background: var(--_bg-soft);
+  border-bottom: 1px solid var(--_border);
 }
 
 // Response headers
@@ -298,7 +373,7 @@
   background: var(--_code-bg);
 
   code {
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-family: var(--_font-mono);
   }
 }
 

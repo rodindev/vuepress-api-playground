@@ -1,0 +1,59 @@
+// Vue API Playground — CSS variable surface
+//
+// Import this partial to get vap theming variables without pulling component
+// styles:
+//
+//   @use 'vue-api-playground/styles/vars';
+//
+// The variables follow a two-level cascade:
+//   --vap-*  (user override / this partial)  →  --vp-c-* (VitePress, if present)
+//   →  hardcoded fallback (works standalone, outside VitePress)
+
+:root {
+  // Method swatches — consumed by MethodBadge and any method indicator
+  --vap-method-get: var(--vp-c-brand-1, #3eaf7c);
+  --vap-method-post: var(--vp-c-green-1, #16a34a);
+  --vap-method-put: var(--vp-c-yellow-1, #d97706);
+  --vap-method-patch: var(--vp-c-purple-1, #8b5cf6);
+  --vap-method-delete: var(--vp-c-red-1, #dc2626);
+  --vap-method-head: var(--vp-c-text-2, #6b7280);
+  --vap-method-options: var(--vp-c-text-2, #6b7280);
+  --vap-method-trace: var(--vp-c-text-2, #6b7280);
+
+  // Typography + surfaces (graceful fallbacks outside VitePress)
+  --vap-font-ui: var(--vp-font-family-base, system-ui, sans-serif);
+  --vap-font-mono: var(
+    --vp-font-family-mono,
+    ui-monospace,
+    SFMono-Regular,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace
+  );
+  --vap-surface: var(--vp-c-bg-soft, #f6f6f7);
+  --vap-surface-border: var(--vp-c-divider, #e2e2e3);
+  --vap-text-1: var(--vp-c-text-1, #213547);
+  --vap-text-2: var(--vp-c-text-2, #475569);
+  --vap-radius: 8px;
+
+  // JSON syntax highlighting — light-theme palette (VSCode light). Works on
+  // both light and dark code surfaces, but dark mode overrides below.
+  --vap-json-key: #0550ae;
+  --vap-json-string: #a31515;
+  --vap-json-number: #098658;
+  --vap-json-bool: #0000ff;
+}
+
+html.dark {
+  --vap-surface: var(--vp-c-bg-alt, #1b1b1f);
+  --vap-surface-border: var(--vp-c-divider, #2e2e32);
+  --vap-text-1: var(--vp-c-text-1, #dfdfd6);
+  --vap-text-2: var(--vp-c-text-2, #98989f);
+
+  // VSCode dark palette for JSON on dark code backgrounds
+  --vap-json-key: #9cdcfe;
+  --vap-json-string: #ce9178;
+  --vap-json-number: #b5cea8;
+  --vap-json-bool: #569cd6;
+}

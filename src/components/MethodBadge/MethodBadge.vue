@@ -1,5 +1,5 @@
 <template>
-  <span class="vap-badge" :class="`vap-badge--${color}`">
+  <span class="vap-badge" :class="classes">
     {{ method.toUpperCase() }}
   </span>
 </template>
@@ -18,5 +18,11 @@ const colors: Record<string, string> = {
   delete: 'danger',
 }
 
-const color = computed(() => colors[props.method.toLowerCase()] ?? 'info')
+const methodLower = computed(() => props.method.toLowerCase())
+const color = computed(() => colors[methodLower.value] ?? 'info')
+const classes = computed(() => [
+  `vap-badge--${color.value}`,
+  'vap-method',
+  `vap-method--${methodLower.value}`,
+])
 </script>

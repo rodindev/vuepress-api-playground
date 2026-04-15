@@ -33,4 +33,25 @@ describe('MethodBadge', () => {
     const wrapper = mount(MethodBadge, { props: { method: 'get' } })
     expect(wrapper.find('.vap-badge').exists()).toBe(true)
   })
+
+  it('adds per-method class for CSS-var theming', () => {
+    const cases = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
+    for (const method of cases) {
+      const wrapper = mount(MethodBadge, { props: { method } })
+      expect(wrapper.find(`.vap-method--${method}`).exists()).toBe(true)
+      expect(wrapper.find('.vap-method').exists()).toBe(true)
+    }
+  })
+
+  it('honors an inline --vap-method-* override on the host element', () => {
+    const wrapper = mount(MethodBadge, {
+      props: { method: 'get' },
+      attachTo: document.body,
+    })
+    const el = wrapper.element as HTMLElement
+    el.style.setProperty('--vap-method-get', 'rgb(10, 20, 30)')
+    expect(el.style.getPropertyValue('--vap-method-get')).toBe('rgb(10, 20, 30)')
+    expect(el.classList.contains('vap-method--get')).toBe(true)
+    wrapper.unmount()
+  })
 })
