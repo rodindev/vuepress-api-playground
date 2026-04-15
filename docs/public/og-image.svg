@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#ffffff" />
+
+  <g transform="translate(80 80)">
+    <rect width="40" height="40" rx="9" fill="#2563eb" />
+    <path d="M16 13 L27 20 L16 27 Z" fill="#ffffff" />
+    <text x="56" y="27"
+          font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+          font-size="18" font-weight="500" fill="#525252" letter-spacing="-0.3">
+      vue-api-playground
+    </text>
+  </g>
+
+  <text x="80" y="338"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="104" font-weight="700" fill="#0a0a0a" letter-spacing="-4">
+    Ship runnable APIs
+  </text>
+  <text x="80" y="438"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="104" font-weight="700" fill="#a3a3a3" letter-spacing="-4">
+    in your docs.
+  </text>
+
+  <line x1="80" y1="510" x2="1120" y2="510" stroke="#e5e5e5" stroke-width="1" />
+
+  <text x="80" y="560"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-size="22" font-weight="500" fill="#171717">
+    Vue 3 · VitePress · TypeScript · Zero deps
+  </text>
+  <text x="1120" y="560" text-anchor="end"
+        font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+        font-size="22" font-weight="500" fill="#525252">
+    npm i vue-api-playground
+  </text>
+</svg>
