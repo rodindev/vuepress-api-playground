@@ -1,5 +1,5 @@
 <template>
-  <div v-if="body !== null" class="vap-response">
+  <div v-if="hasResponse" class="vap-response">
     <div class="vap-response__bar">
       <span v-if="status !== null" class="vap-response__status">
         Status:
@@ -11,6 +11,7 @@
       <span v-if="payloadSize" class="vap-response__size">
         {{ payloadSize }}
       </span>
+      <span v-if="streaming" class="vap-response__streaming" aria-live="polite"> streaming… </span>
       <button
         class="vap-btn vap-btn--secondary"
         :aria-label="copiedResponse ? 'Copied' : 'Copy response'"
@@ -28,15 +29,32 @@
       </button>
     </div>
 
-    <details v-if="headers" class="vap-response__headers">
-      <summary>Response Headers</summary>
-      <pre class="vap-code"><code>{{ formattedHeaders }}</code></pre>
-    </details>
+    <slot v-if="error" name="error" :error="error" :request="request">
+      <div class="vap-response__hint" role="alert">
+        {{ error }}
+      </div>
+    </slot>
 
-    <pre
-      class="vap-code"
-    ><code v-if="highlighted" v-html="highlighted" /><code v-else>{{ formattedResponse }}</code></pre>
+    <slot name="response-headers" :headers="headers">
+      <details v-if="headers" class="vap-response__headers">
+        <summary>Response Headers</summary>
+        <pre class="vap-code"><code>{{ formattedHeaders }}</code></pre>
+      </details>
+    </slot>
+
+    <slot
+      name="response-body"
+      :body="body"
+      :formatted="formattedResponse"
+      :highlighted="highlighted"
+      :chunks="chunks"
+    >
+      <pre
+        class="vap-code"
+      ><code v-if="highlighted" v-html="highlighted" /><code v-else>{{ formattedResponse }}</code></pre>
+    </slot>
   </div>
+  <slot v-else name="empty-response" />
 </template>
 
 <script setup lang="ts">
@@ -46,6 +64,18 @@ import { toCurl } from '../../utils/curl'
 import { highlightJson } from '../../utils/highlight'
 
 const props = defineProps<ApiResponseProps>()
+
+defineSlots<{
+  'empty-response'(): unknown
+  error(props: { error: string; request: ApiResponseProps['request'] }): unknown
+  'response-headers'(props: { headers: ApiResponseProps['headers'] }): unknown
+  'response-body'(props: {
+    body: unknown
+    formatted: string
+    highlighted: string | null
+    chunks: string[] | null | undefined
+  }): unknown
+}>()
 
 const copiedResponse = ref(false)
 const copiedCurl = ref(false)
@@ -57,8 +87,17 @@ onBeforeUnmount(() => {
   if (curlTimeout) clearTimeout(curlTimeout)
 })
 
+const hasResponse = computed(() => {
+  if (props.body !== null && props.body !== undefined) return true
+  if (props.chunks && props.chunks.length > 0) return true
+  if (props.streaming) return true
+  if (props.error) return true
+  return false
+})
+
 const formattedResponse = computed(() => {
-  if (props.body === null) return ''
+  if (props.chunks && props.chunks.length > 0) return props.chunks.join('')
+  if (props.body === null || props.body === undefined) return ''
   if (typeof props.body === 'string') return props.body
   return JSON.stringify(props.body, null, 2)
 })
@@ -66,6 +105,7 @@ const formattedResponse = computed(() => {
 const highlighted = computed(() => {
   const text = formattedResponse.value
   if (!text) return null
+  if (props.chunks && props.chunks.length > 0) return null
   return highlightJson(text)
 })
 

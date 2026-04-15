@@ -1,4 +1,4 @@
-import type { PlaygroundDataItem } from '../Playground/types'
+import type { PlaygroundContentType, PlaygroundDataItem } from '../Playground/types'
 
 export interface ApiRequestProps {
   url: string
@@ -8,4 +8,6 @@ export interface ApiRequestProps {
   loading?: boolean
   showMethod?: boolean
   headingTag?: string
+  servers?: string[]
+  contentType?: PlaygroundContentType
 }

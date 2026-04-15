@@ -11,4 +11,7 @@ export interface ApiResponseProps {
   headers: Record<string, string> | null
   body: unknown
   request?: ApiResponseRequest
+  error?: string | null
+  chunks?: string[] | null
+  streaming?: boolean
 }

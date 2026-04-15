@@ -16,8 +16,14 @@
       :headers="headers"
       :loading="loading"
       :heading-tag="headingTag"
+      :servers="servers"
+      :content-type="contentType"
       @execute="handleExecute"
-    />
+    >
+      <template v-if="$slots['send-button']" #send-button="slotProps">
+        <slot name="send-button" v-bind="slotProps" />
+      </template>
+    </ApiRequest>
 
     <ApiResponse
       :status="response.status"
@@ -25,7 +31,23 @@
       :headers="response.headers"
       :body="response.body"
       :request="lastRequest"
-    />
+      :error="response.error"
+      :chunks="response.chunks"
+      :streaming="response.streaming"
+    >
+      <template v-if="$slots['empty-response']" #empty-response>
+        <slot name="empty-response" />
+      </template>
+      <template v-if="$slots.error" #error="slotProps">
+        <slot name="error" v-bind="slotProps" />
+      </template>
+      <template v-if="$slots['response-headers']" #response-headers="slotProps">
+        <slot name="response-headers" v-bind="slotProps" />
+      </template>
+      <template v-if="$slots['response-body']" #response-body="slotProps">
+        <slot name="response-body" v-bind="slotProps" />
+      </template>
+    </ApiResponse>
   </div>
 </template>
 
@@ -43,7 +65,20 @@ const props = withDefaults(defineProps<PlaygroundProps>(), {
   showMethod: false,
   showUrl: false,
   headingTag: 'h4',
+  servers: undefined,
+  contentType: undefined,
 })
+
+const emit = defineEmits<{
+  'before-send': [envelope: { url: string; init: RequestInit }]
+}>()
+
+// Slot names: 'send-button', 'empty-response', 'error',
+// 'response-headers', 'response-body'. Defaults fall back to the
+// components below when a slot is not provided.
+
+const CORS_HINT =
+  'Network request failed. The browser may have blocked the request due to CORS or a network error. If you have curl available, try the equivalent shell command.'
 
 const loading = ref(false)
 const lastRequest = ref<ApiResponseRequest | undefined>(undefined)
@@ -52,11 +87,17 @@ const response = reactive<{
   status: number | null
   time: number | null
   headers: Record<string, string> | null
+  error: string | null
+  chunks: string[] | null
+  streaming: boolean
 }>({
   body: null,
   status: null,
   time: null,
   headers: null,
+  error: null,
+  chunks: null,
+  streaming: false,
 })
 
 let abortController: AbortController | null = null
@@ -64,6 +105,28 @@ let abortController: AbortController | null = null
 onBeforeUnmount(() => {
   abortController?.abort()
 })
+
+function headersToRecord(headers: Headers): Record<string, string> {
+  const record: Record<string, string> = {}
+  headers.forEach((value, key) => {
+    record[key] = value
+  })
+  return record
+}
+
+function bodyToSerializable(body: BodyInit | null | undefined): string | undefined {
+  if (body == null) return undefined
+  if (typeof body === 'string') return body
+  if (body instanceof URLSearchParams) return body.toString()
+  if (body instanceof FormData) {
+    const parts: string[] = []
+    body.forEach((value, key) => {
+      parts.push(`${key}=${value instanceof File ? value.name : String(value)}`)
+    })
+    return parts.join('&')
+  }
+  return undefined
+}
 
 async function handleExecute(request: { url: string; init: RequestInit }) {
   abortController?.abort()
@@ -73,31 +136,56 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
   response.status = null
   response.time = null
   response.headers = null
+  response.error = null
+  response.chunks = null
+  response.streaming = false
   loading.value = true
 
-  lastRequest.value = {
+  const envelope = {
     url: request.url,
-    method: (request.init.method ?? props.method).toUpperCase(),
-    headers: request.init.headers as Record<string, string> | undefined,
-    body: request.init.body as string | undefined,
+    init: { ...request.init, signal: abortController.signal },
+  }
+  emit('before-send', envelope)
+
+  lastRequest.value = {
+    url: envelope.url,
+    method: (envelope.init.method ?? props.method).toUpperCase(),
+    headers: envelope.init.headers as Record<string, string> | undefined,
+    body: bodyToSerializable(envelope.init.body),
   }
 
   const start = performance.now()
 
   try {
-    const res = await fetch(request.url, {
-      ...request.init,
-      signal: abortController.signal,
-    })
+    const res = await fetch(envelope.url, envelope.init)
 
     response.status = res.status
     response.time = Math.round(performance.now() - start)
 
-    const headers: Record<string, string> = {}
-    res.headers.forEach((value, key) => {
-      headers[key] = value
-    })
-    response.headers = Object.keys(headers).length > 0 ? headers : null
+    const headerRecord = headersToRecord(res.headers)
+    response.headers = Object.keys(headerRecord).length > 0 ? headerRecord : null
+
+    const ct = res.headers.get('content-type') ?? ''
+
+    if (ct.includes('text/event-stream') && res.body) {
+      response.chunks = []
+      response.streaming = true
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      try {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          const chunk = decoder.decode(value, { stream: true })
+          if (chunk) response.chunks.push(chunk)
+        }
+        const tail = decoder.decode()
+        if (tail) response.chunks.push(tail)
+      } finally {
+        response.streaming = false
+      }
+      return
+    }
 
     const text = await res.text()
     try {
@@ -108,7 +196,13 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') return
     response.time = Math.round(performance.now() - start)
-    response.body = error instanceof Error ? error.message : String(error)
+    const message = error instanceof Error ? error.message : String(error)
+    response.body = message
+    if (error instanceof TypeError) {
+      response.error = CORS_HINT
+    } else {
+      response.error = message
+    }
   } finally {
     loading.value = false
   }
