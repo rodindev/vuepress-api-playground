@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0](https://github.com/rodindev/vue-api-playground/compare/v2.1.1...v2.2.0) (2026-04-16)
+
+### Features
+
+* body preset, auth config, server v-model, lifecycle events ([98ae7cb](https://github.com/rodindev/vue-api-playground/commit/98ae7cb6cfa3959c254e490829232adae8b7010b))
+
+### Documentation
+
+* add favicons, OG image and rework landing page ([39cce90](https://github.com/rodindev/vue-api-playground/commit/39cce907b1fe0635563a405b794993fcad38df28))
+
+### CI
+
+* bump pages actions to Node 24 compatible versions ([58a10bf](https://github.com/rodindev/vue-api-playground/commit/58a10bf3bf5ec01fb2ec64894e53a48c23cbd5f9))
+
 ## [2.1.1](https://github.com/rodindev/vue-api-playground/compare/v2.1.0...v2.1.1) (2026-04-15)
 
 ### Chores
