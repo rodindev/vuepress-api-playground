@@ -152,6 +152,24 @@
   }
 }
 
+.vap-request__auth {
+  margin-bottom: 0.5rem;
+}
+
+.vap-request__body {
+  margin: 0.5rem 0;
+}
+
+.vap-request__body-textarea {
+  height: auto;
+  min-height: 6rem;
+  padding: 0.5rem;
+  line-height: 1.4;
+  resize: vertical;
+  font-family: var(--_font-mono);
+  font-size: 0.8rem;
+}
+
 // Shared table
 .vap-table {
   display: table;
@@ -190,6 +208,12 @@
   &:focus {
     border-color: var(--_focus-ring);
   }
+}
+
+select.vap-input {
+  appearance: auto;
+  padding-right: 1.5rem;
+  cursor: pointer;
 }
 
 // Shared buttons

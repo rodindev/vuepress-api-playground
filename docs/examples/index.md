@@ -225,3 +225,89 @@ Delete a post:
 ```
 
 :::
+
+## POST with Raw JSON Body
+
+Preset the request body as a raw string. Editable in the UI; user edits take
+precedence over subsequent external updates.
+
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts"
+  method="post"
+  content-type="application/json"
+  body='{"title":"Hello","body":"Preset body","userId":1}'
+/>
+
+::: details Source
+
+```vue
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts"
+  method="post"
+  content-type="application/json"
+  body='{"title":"Hello","body":"Preset body","userId":1}'
+/>
+```
+
+:::
+
+## Bearer Auth
+
+Declarative bearer token. The `Authorization: Bearer …` header is attached only
+when the field is non-empty.
+
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts/1"
+  method="get"
+  :auth="{ type: 'bearer', token: 'demo-token' }"
+/>
+
+::: details Source
+
+```vue
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts/1"
+  method="get"
+  :auth="{ type: 'bearer', token: 'demo-token' }"
+/>
+```
+
+:::
+
+## Multiple Servers
+
+When `servers` has more than one entry, a selector is rendered. Use
+`v-model:server` to control which origin is selected.
+
+<VueApiPlayground
+  url="/posts/1"
+  method="get"
+  :servers="['https://jsonplaceholder.typicode.com', 'https://dummyjson.com']"
+/>
+
+::: details Source
+
+```vue
+<VueApiPlayground
+  url="/posts/1"
+  method="get"
+  :servers="['https://jsonplaceholder.typicode.com', 'https://dummyjson.com']"
+/>
+```
+
+:::
+
+## Lifecycle Events
+
+Observe request timing, status, and errors via `@request-start`,
+`@request-success`, and `@request-error`:
+
+```vue
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts/1"
+  method="get"
+  @request-start="(p) => console.log('[start]', p)"
+  @request-success="(p) => console.log('[ok]', p.status, p.durationMs)"
+  @request-error="(p) => console.warn('[err]', p.error, p.durationMs)"
+/>
+```

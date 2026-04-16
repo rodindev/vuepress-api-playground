@@ -10,6 +10,10 @@ export type {
   PlaygroundDataItemType,
   PlaygroundProps,
   PlaygroundContentType,
+  AuthConfig,
+  RequestStartPayload,
+  RequestSuccessPayload,
+  RequestErrorPayload,
 } from './components/Playground/types'
 export type { ApiRequestProps } from './components/ApiRequest/types'
 export type { ApiResponseProps, ApiResponseRequest } from './components/ApiResponse/types'

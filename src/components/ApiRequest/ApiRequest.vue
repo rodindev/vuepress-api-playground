@@ -33,11 +33,78 @@
 
     <div v-if="servers && servers.length > 1" class="vap-request__server">
       <component :is="headingTag">Server:</component>
-      <select v-model="selectedServer" class="vap-input" aria-label="Server">
+      <select
+        :value="selectedServer"
+        class="vap-input"
+        aria-label="Server"
+        @change="onServerChange"
+      >
         <option v-for="server in servers" :key="server" :value="server">
           {{ server }}
         </option>
       </select>
+    </div>
+
+    <div v-if="authLocal.type !== 'none'" class="vap-request__auth">
+      <component :is="headingTag">Auth:</component>
+      <table class="vap-table">
+        <tbody>
+          <tr v-if="authLocal.type === 'bearer'">
+            <td>Token</td>
+            <td>
+              <input
+                type="password"
+                class="vap-input"
+                aria-label="Bearer token"
+                :value="bearerToken"
+                @input="updateAuth('token', ($event.target as HTMLInputElement).value)"
+                @keydown.enter.exact="emitExecute"
+              />
+            </td>
+          </tr>
+          <template v-else-if="authLocal.type === 'basic'">
+            <tr>
+              <td>Username</td>
+              <td>
+                <input
+                  type="text"
+                  class="vap-input"
+                  aria-label="Basic auth username"
+                  :value="basicUsername"
+                  @input="updateAuth('username', ($event.target as HTMLInputElement).value)"
+                  @keydown.enter.exact="emitExecute"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td>
+                <input
+                  type="password"
+                  class="vap-input"
+                  aria-label="Basic auth password"
+                  :value="basicPassword"
+                  @input="updateAuth('password', ($event.target as HTMLInputElement).value)"
+                  @keydown.enter.exact="emitExecute"
+                />
+              </td>
+            </tr>
+          </template>
+          <tr v-else-if="authLocal.type === 'apiKey'">
+            <td>{{ apiKeyName }} ({{ apiKeyIn }})</td>
+            <td>
+              <input
+                type="password"
+                class="vap-input"
+                :aria-label="`API key ${apiKeyName}`"
+                :value="apiKeyValue"
+                @input="updateAuth('value', ($event.target as HTMLInputElement).value)"
+                @keydown.enter.exact="emitExecute"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div v-if="visibleHeaders">
@@ -100,6 +167,17 @@
       </table>
     </template>
 
+    <div v-if="bodyEligible" class="vap-request__body">
+      <component :is="headingTag">Body:</component>
+      <textarea
+        v-model="bodyInput"
+        class="vap-input vap-request__body-textarea"
+        :aria-label="`Request body (${contentType})`"
+        rows="6"
+        @input="bodyDirty = true"
+      />
+    </div>
+
     <slot name="send-button" :loading="loading" :execute="emitExecute">
       <button
         class="vap-btn vap-btn--primary"
@@ -116,7 +194,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive, watch } from 'vue'
-import type { PlaygroundContentType, PlaygroundDataItem } from '../Playground/types'
+import type { AuthConfig, PlaygroundContentType, PlaygroundDataItem } from '../Playground/types'
 import type { ApiRequestProps } from './types'
 import { parseCurl } from '../../utils/curl'
 import MethodBadge from '../MethodBadge/MethodBadge.vue'
@@ -129,15 +207,26 @@ const props = withDefaults(defineProps<ApiRequestProps>(), {
   headingTag: 'h4',
   servers: undefined,
   contentType: undefined,
+  body: undefined,
+  auth: undefined,
+  server: undefined,
 })
 
 const emit = defineEmits<{
   execute: [request: { url: string; init: RequestInit }]
+  'update:auth': [value: AuthConfig]
+  'update:server': [value: string]
 }>()
 
 defineSlots<{
   'send-button'(props: { loading: boolean; execute: () => void }): unknown
 }>()
+
+const BODY_ELIGIBLE_TYPES: PlaygroundContentType[] = [
+  'application/json',
+  'text/plain',
+  'application/xml',
+]
 
 const inputData = ref<PlaygroundDataItem[]>([])
 const inputValues = ref<string[]>([])
@@ -145,7 +234,62 @@ const editableHeaders = reactive<Record<string, string>>({})
 const curlInput = ref('')
 const curlError = ref('')
 const curlWarning = ref('')
-const selectedServer = ref<string>(props.servers?.[0] ?? '')
+
+const selectedServer = ref<string>(props.server ?? props.servers?.[0] ?? '')
+
+const bodyInput = ref<string>(props.body ?? '')
+const bodyDirty = ref(false)
+
+function cloneAuth(a: AuthConfig | undefined): AuthConfig {
+  if (!a) return { type: 'none' }
+  return { ...a } as AuthConfig
+}
+
+const authLocal = reactive<AuthConfig>(cloneAuth(props.auth))
+
+const bearerToken = computed(() => (authLocal.type === 'bearer' ? (authLocal.token ?? '') : ''))
+const basicUsername = computed(() => (authLocal.type === 'basic' ? (authLocal.username ?? '') : ''))
+const basicPassword = computed(() => (authLocal.type === 'basic' ? (authLocal.password ?? '') : ''))
+const apiKeyValue = computed(() => (authLocal.type === 'apiKey' ? (authLocal.value ?? '') : ''))
+const apiKeyName = computed(() => (authLocal.type === 'apiKey' ? authLocal.name : ''))
+const apiKeyIn = computed(() => (authLocal.type === 'apiKey' ? authLocal.in : ''))
+
+const bodyEligible = computed(() => {
+  if (!props.contentType) return false
+  if (!BODY_ELIGIBLE_TYPES.includes(props.contentType)) return false
+  return ['post', 'put', 'patch'].includes(props.method.toLowerCase())
+})
+
+watch(
+  () => props.body,
+  (newBody) => {
+    if (bodyDirty.value) return
+    bodyInput.value = newBody ?? ''
+  }
+)
+
+watch(
+  () => props.contentType,
+  (ct) => {
+    if (ct && !BODY_ELIGIBLE_TYPES.includes(ct) && props.body !== undefined) {
+      if (typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production') {
+        console.warn(
+          `[vap] body prop is ignored for contentType="${ct}" — supported: ${BODY_ELIGIBLE_TYPES.join(', ')}`
+        )
+      }
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.server,
+  (newServer) => {
+    if (newServer !== undefined && newServer !== selectedServer.value) {
+      selectedServer.value = newServer
+    }
+  }
+)
 
 watch(
   () => props.servers,
@@ -159,6 +303,32 @@ watch(
     }
   }
 )
+
+watch(
+  () => props.auth,
+  (newAuth) => {
+    const prev = authLocal as { type: string; [key: string]: unknown }
+    for (const k of Object.keys(prev)) delete prev[k]
+    Object.assign(authLocal, cloneAuth(newAuth))
+  }
+)
+
+function onServerChange(event: Event) {
+  const val = (event.target as HTMLSelectElement).value
+  selectedServer.value = val
+  emit('update:server', val)
+}
+
+function updateAuth(field: string, value: string) {
+  if (authLocal.type === 'bearer' && field === 'token') {
+    authLocal.token = value
+  } else if (authLocal.type === 'basic' && (field === 'username' || field === 'password')) {
+    authLocal[field] = value
+  } else if (authLocal.type === 'apiKey' && field === 'value') {
+    authLocal.value = value
+  }
+  emit('update:auth', { ...authLocal })
+}
 
 const visibleHeaders = computed(() => {
   const keys = Object.keys(editableHeaders)
@@ -247,6 +417,49 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+function applyAuthToRequest(
+  headers: Record<string, string>,
+  url: string
+): { headers: Record<string, string>; url: string } {
+  const a = authLocal as AuthConfig
+  if (a.type === 'none' || !a.type) return { headers, url }
+
+  if (a.type === 'bearer') {
+    const token = (a.token ?? '').trim()
+    if (token && !findHeaderKey(headers, 'authorization')) {
+      headers.Authorization = `Bearer ${token}`
+    }
+    return { headers, url }
+  }
+
+  if (a.type === 'basic') {
+    const u = a.username ?? ''
+    const p = a.password ?? ''
+    if ((u || p) && !findHeaderKey(headers, 'authorization')) {
+      const encoded =
+        typeof btoa === 'function' ? btoa(`${u}:${p}`) : Buffer.from(`${u}:${p}`).toString('base64')
+      headers.Authorization = `Basic ${encoded}`
+    }
+    return { headers, url }
+  }
+
+  if (a.type === 'apiKey') {
+    const value = (a.value ?? '').trim()
+    if (!value || !a.name) return { headers, url }
+    if (a.in === 'header') {
+      if (!findHeaderKey(headers, a.name)) headers[a.name] = value
+      return { headers, url }
+    }
+    if (a.in === 'query') {
+      const sep = url.includes('?') ? '&' : '?'
+      const nextUrl = `${url}${sep}${encodeURIComponent(a.name)}=${encodeURIComponent(value)}`
+      return { headers, url: nextUrl }
+    }
+  }
+
+  return { headers, url }
+}
+
 function emitExecute() {
   if (props.loading) return
 
@@ -315,8 +528,19 @@ function emitExecute() {
   const hasBody = ['post', 'put', 'patch'].includes(method)
   const hasExplicitContentType = props.contentType !== undefined
   const hasFiles = fileItems.length > 0
+  const useRawBody =
+    hasBody &&
+    hasExplicitContentType &&
+    BODY_ELIGIBLE_TYPES.includes(props.contentType as PlaygroundContentType) &&
+    props.body !== undefined
 
-  if (hasBody && (hasExplicitContentType || hasFiles)) {
+  if (useRawBody) {
+    const ct = props.contentType as PlaygroundContentType
+    const headers = { ...baseHeaders }
+    init.body = bodyInput.value
+    if (!findHeaderKey(headers, 'content-type')) headers['Content-Type'] = ct
+    if (Object.keys(headers).length > 0) init.headers = headers
+  } else if (hasBody && (hasExplicitContentType || hasFiles)) {
     const ct: PlaygroundContentType =
       props.contentType ?? (hasFiles ? 'multipart/form-data' : 'application/json')
     const headers = { ...baseHeaders }
@@ -339,7 +563,7 @@ function emitExecute() {
     } else if (ct === 'multipart/form-data') {
       const fd = new FormData()
       for (const [k, v] of bodyEntries) {
-        fd.append(k, v as string | Blob)
+        fd.append(k, v)
       }
       init.body = fd
       const existing = findHeaderKey(headers, 'content-type')
@@ -349,6 +573,13 @@ function emitExecute() {
         .filter(([, v]) => typeof v === 'string')
         .map(([k, v]) => `${k}=${v as string}`)
         .join('\n')
+      init.body = text
+      if (!findHeaderKey(headers, 'content-type')) headers['Content-Type'] = ct
+    } else if (ct === 'application/xml') {
+      const text = bodyEntries
+        .filter(([, v]) => typeof v === 'string')
+        .map(([k, v]) => `<${k}>${v as string}</${k}>`)
+        .join('')
       init.body = text
       if (!findHeaderKey(headers, 'content-type')) headers['Content-Type'] = ct
     } else {
@@ -390,6 +621,15 @@ function emitExecute() {
   }
   const qs = queryParams.toString()
   if (qs) url = `${url}${url.includes('?') ? '&' : '?'}${qs}`
+
+  const effectiveHeaders: Record<string, string> = {
+    ...((init.headers as Record<string, string> | undefined) ?? {}),
+  }
+  const applied = applyAuthToRequest(effectiveHeaders, url)
+  url = applied.url
+  if (Object.keys(applied.headers).length > 0) {
+    init.headers = applied.headers
+  }
 
   emit('execute', { url, init })
 }

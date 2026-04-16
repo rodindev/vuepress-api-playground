@@ -35,15 +35,46 @@ Path parameters are consumed from the data — remaining fields become query par
 
 ## Props
 
-| Prop         | Type                     | Required | Default | Description                                                        |
-| ------------ | ------------------------ | -------- | ------- | ------------------------------------------------------------------ |
-| `url`        | `string`                 | yes      | —       | API endpoint URL. Supports `{param}` and `<param>` path parameters |
-| `method`     | `string`                 | yes      | —       | HTTP method: `get`, `post`, `put`, `patch`, `delete`               |
-| `data`       | `PlaygroundDataItem[]`   | no       | `[]`    | Input fields for the request                                       |
-| `headers`    | `Record<string, string>` | no       | —       | Custom HTTP headers (editable in the UI)                           |
-| `showMethod` | `boolean`                | no       | `false` | Show HTTP method badge                                             |
-| `showUrl`    | `boolean`                | no       | `false` | Show the URL above the form                                        |
-| `headingTag` | `string`                 | no       | `'h4'`  | HTML tag for section headings                                      |
+| Prop             | Type                     | Required | Default            | Description                                                                                                                          |
+| ---------------- | ------------------------ | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `url`            | `string`                 | yes      | —                  | API endpoint URL. Supports `{param}` and `<param>` path parameters                                                                   |
+| `method`         | `string`                 | yes      | —                  | HTTP method: `get`, `post`, `put`, `patch`, `delete`                                                                                 |
+| `data`           | `PlaygroundDataItem[]`   | no       | `[]`               | Input fields for the request                                                                                                         |
+| `headers`        | `Record<string, string>` | no       | —                  | Custom HTTP headers (editable in the UI)                                                                                             |
+| `showMethod`     | `boolean`                | no       | `false`            | Show HTTP method badge                                                                                                               |
+| `showUrl`        | `boolean`                | no       | `false`            | Show the URL above the form                                                                                                          |
+| `headingTag`     | `string`                 | no       | `'h4'`             | HTML tag for section headings                                                                                                        |
+| `servers`        | `string[]`               | no       | —                  | Server URLs. When more than one, a selector is rendered                                                                              |
+| `contentType`    | `PlaygroundContentType`  | no       | —                  | Body serialization: `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, `application/xml`  |
+| `body`           | `string`                 | no       | —                  | Preset request body. Active when `contentType` is `application/json`, `text/plain`, or `application/xml`. User edits take precedence |
+| `v-model:auth`   | `AuthConfig`             | no       | `{ type: 'none' }` | Declarative auth. See below                                                                                                          |
+| `v-model:server` | `string`                 | no       | first of `servers` | Currently selected base URL                                                                                                          |
+
+## Auth
+
+```ts
+type AuthConfig =
+  | { type: 'none' }
+  | { type: 'bearer'; token?: string }
+  | { type: 'basic'; username?: string; password?: string }
+  | { type: 'apiKey'; in: 'header' | 'query'; name: string; value?: string }
+```
+
+- `bearer` → `Authorization: Bearer <token>`
+- `basic` → `Authorization: Basic base64(username:password)`
+- `apiKey` with `in: 'header'` → `<name>: <value>` header
+- `apiKey` with `in: 'query'` → `?<name>=<value>` appended to the URL
+
+Empty values are skipped; no header or query param is attached when the field is blank.
+
+## Events
+
+| Event             | Payload                                 | Description                    |
+| ----------------- | --------------------------------------- | ------------------------------ |
+| `before-send`     | `{ url, init }`                         | Mutate envelope before fetch   |
+| `request-start`   | `{ url, method, headers, body }`        | Fires just before `fetch()`    |
+| `request-success` | `{ status, headers, body, durationMs }` | Fires on successful response   |
+| `request-error`   | `{ error, durationMs }`                 | Fires on network / abort error |
 
 ### PlaygroundDataItem
 

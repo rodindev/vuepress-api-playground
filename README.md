@@ -80,15 +80,29 @@ import { Playground } from 'vue-api-playground'
 
 ## Props
 
-| Prop         | Type                     | Default | Description                                                    |
-| ------------ | ------------------------ | ------- | -------------------------------------------------------------- |
-| `url`        | `string`                 | —       | API endpoint. Supports `{param}` and `<param>` path parameters |
-| `method`     | `string`                 | —       | HTTP method: `get`, `post`, `put`, `patch`, `delete`           |
-| `data`       | `PlaygroundDataItem[]`   | `[]`    | Input fields for the request                                   |
-| `headers`    | `Record<string, string>` | —       | Custom HTTP headers (editable)                                 |
-| `showMethod` | `boolean`                | `false` | Show method badge                                              |
-| `showUrl`    | `boolean`                | `false` | Show URL                                                       |
-| `headingTag` | `string`                 | `'h4'`  | HTML tag for section headings                                  |
+| Prop             | Type                     | Default            | Description                                                             |
+| ---------------- | ------------------------ | ------------------ | ----------------------------------------------------------------------- |
+| `url`            | `string`                 | —                  | API endpoint. Supports `{param}` and `<param>` path parameters          |
+| `method`         | `string`                 | —                  | HTTP method: `get`, `post`, `put`, `patch`, `delete`                    |
+| `data`           | `PlaygroundDataItem[]`   | `[]`               | Input fields for the request                                            |
+| `headers`        | `Record<string, string>` | —                  | Custom HTTP headers (editable)                                          |
+| `showMethod`     | `boolean`                | `false`            | Show method badge                                                       |
+| `showUrl`        | `boolean`                | `false`            | Show URL                                                                |
+| `headingTag`     | `string`                 | `'h4'`             | HTML tag for section headings                                           |
+| `servers`        | `string[]`               | —                  | Server URLs. When more than one, a selector is rendered                 |
+| `contentType`    | `PlaygroundContentType`  | —                  | Body serialization: json, urlencoded, multipart, text/plain, xml        |
+| `body`           | `string`                 | —                  | Preset request body (JSON/text/XML). User edits take precedence         |
+| `v-model:auth`   | `AuthConfig`             | `{type:'none'}`    | Declarative auth: `none`, `bearer`, `basic`, or `apiKey` (header/query) |
+| `v-model:server` | `string`                 | first of `servers` | Currently selected base URL                                             |
+
+## Events
+
+| Event             | Payload                                 | Description                    |
+| ----------------- | --------------------------------------- | ------------------------------ |
+| `before-send`     | `{ url, init }`                         | Mutate envelope before fetch   |
+| `request-start`   | `{ url, method, headers, body }`        | Fires just before `fetch()`    |
+| `request-success` | `{ status, headers, body, durationMs }` | Fires on successful response   |
+| `request-error`   | `{ error, durationMs }`                 | Fires on network / abort error |
 
 ## Custom Theming
 

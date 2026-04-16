@@ -18,6 +18,11 @@
       :heading-tag="headingTag"
       :servers="servers"
       :content-type="contentType"
+      :body="body"
+      :auth="authModel"
+      :server="serverModel"
+      @update:auth="authModel = $event"
+      @update:server="serverModel = $event"
       @execute="handleExecute"
     >
       <template v-if="$slots['send-button']" #send-button="slotProps">
@@ -53,7 +58,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, onBeforeUnmount } from 'vue'
-import type { PlaygroundProps } from './types'
+import type {
+  AuthConfig,
+  PlaygroundProps,
+  RequestErrorPayload,
+  RequestStartPayload,
+  RequestSuccessPayload,
+} from './types'
 import type { ApiResponseRequest } from '../ApiResponse/types'
 import MethodBadge from '../MethodBadge/MethodBadge.vue'
 import ApiRequest from '../ApiRequest/ApiRequest.vue'
@@ -67,15 +78,20 @@ const props = withDefaults(defineProps<PlaygroundProps>(), {
   headingTag: 'h4',
   servers: undefined,
   contentType: undefined,
+  body: undefined,
 })
 
 const emit = defineEmits<{
   'before-send': [envelope: { url: string; init: RequestInit }]
+  'request-start': [payload: RequestStartPayload]
+  'request-success': [payload: RequestSuccessPayload]
+  'request-error': [payload: RequestErrorPayload]
 }>()
 
-// Slot names: 'send-button', 'empty-response', 'error',
-// 'response-headers', 'response-body'. Defaults fall back to the
-// components below when a slot is not provided.
+const authModel = defineModel<AuthConfig>('auth', {
+  default: () => ({ type: 'none' }) as AuthConfig,
+})
+const serverModel = defineModel<string | undefined>('server', { default: undefined })
 
 const CORS_HINT =
   'Network request failed. The browser may have blocked the request due to CORS or a network error. If you have curl available, try the equivalent shell command.'
@@ -147,12 +163,21 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
   }
   emit('before-send', envelope)
 
+  const serializedBody = bodyToSerializable(envelope.init.body)
+
   lastRequest.value = {
     url: envelope.url,
     method: (envelope.init.method ?? props.method).toUpperCase(),
     headers: envelope.init.headers as Record<string, string> | undefined,
-    body: bodyToSerializable(envelope.init.body),
+    body: serializedBody,
   }
+
+  emit('request-start', {
+    url: envelope.url,
+    method: (envelope.init.method ?? props.method).toUpperCase(),
+    headers: envelope.init.headers as Record<string, string> | undefined,
+    body: serializedBody,
+  })
 
   const start = performance.now()
 
@@ -184,6 +209,12 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
       } finally {
         response.streaming = false
       }
+      emit('request-success', {
+        status: res.status,
+        headers: headerRecord,
+        body: response.chunks,
+        durationMs: response.time ?? 0,
+      })
       return
     }
 
@@ -193,6 +224,13 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
     } catch {
       response.body = text
     }
+
+    emit('request-success', {
+      status: res.status,
+      headers: headerRecord,
+      body: response.body,
+      durationMs: response.time ?? 0,
+    })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') return
     response.time = Math.round(performance.now() - start)
@@ -203,6 +241,10 @@ async function handleExecute(request: { url: string; init: RequestInit }) {
     } else {
       response.error = message
     }
+    emit('request-error', {
+      error: error instanceof Error ? error : new Error(String(error)),
+      durationMs: response.time ?? 0,
+    })
   } finally {
     loading.value = false
   }

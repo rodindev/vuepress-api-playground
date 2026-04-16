@@ -1,4 +1,4 @@
-import type { PlaygroundContentType, PlaygroundDataItem } from '../Playground/types'
+import type { AuthConfig, PlaygroundContentType, PlaygroundDataItem } from '../Playground/types'
 
 export interface ApiRequestProps {
   url: string
@@ -10,4 +10,7 @@ export interface ApiRequestProps {
   headingTag?: string
   servers?: string[]
   contentType?: PlaygroundContentType
+  body?: string
+  auth?: AuthConfig
+  server?: string
 }
