@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.3.0](https://github.com/rodindev/vue-api-playground/compare/v2.2.0...v2.3.0) (2026-04-20)
+
+### Features
+
+* add dense mode and data item descriptions ([b4c9f65](https://github.com/rodindev/vue-api-playground/commit/b4c9f657b907c8854ecc7bcac972fe288e26d079))
+
+### Styles
+
+* **docs:** lighten hero brand button to match accent ([a564b31](https://github.com/rodindev/vue-api-playground/commit/a564b31b7e54290c0f5ac5b650f910e119fc5b9f))
+
 ## [2.2.0](https://github.com/rodindev/vue-api-playground/compare/v2.1.1...v2.2.0) (2026-04-16)
 
 ### Features
