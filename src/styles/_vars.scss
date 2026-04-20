@@ -20,6 +20,33 @@
   --vap-method-options: var(--vp-c-text-2, #6b7280);
   --vap-method-trace: var(--vp-c-text-2, #6b7280);
 
+  // Method pill bg/text tokens — three-accent semantic group. Extension
+  // points for theme authors; not consumed by default badge rules so the
+  // solid-fill look is preserved.
+  --vap-method-get-bg: var(--vp-c-indigo-soft, #dbeafe);
+  --vap-method-get-text: var(--vp-c-indigo-1, #1e40af);
+  --vap-method-head-bg: var(--vp-c-indigo-soft, #dbeafe);
+  --vap-method-head-text: var(--vp-c-indigo-1, #1e40af);
+  --vap-method-options-bg: var(--vp-c-indigo-soft, #dbeafe);
+  --vap-method-options-text: var(--vp-c-indigo-1, #1e40af);
+  --vap-method-trace-bg: var(--vp-c-indigo-soft, #dbeafe);
+  --vap-method-trace-text: var(--vp-c-indigo-1, #1e40af);
+  --vap-method-post-bg: var(--vp-c-yellow-soft, #fef3c7);
+  --vap-method-post-text: var(--vp-c-yellow-1, #92400e);
+  --vap-method-put-bg: var(--vp-c-yellow-soft, #fef3c7);
+  --vap-method-put-text: var(--vp-c-yellow-1, #92400e);
+  --vap-method-patch-bg: var(--vp-c-yellow-soft, #fef3c7);
+  --vap-method-patch-text: var(--vp-c-yellow-1, #92400e);
+  --vap-method-delete-bg: var(--vp-c-red-soft, #fee2e2);
+  --vap-method-delete-text: var(--vp-c-red-1, #991b1b);
+
+  // Status bucket swatches — consumed by the response status dot. Same
+  // cascade shape as --vap-method-*.
+  --vap-status-2xx: var(--vp-c-green-1, #16a34a);
+  --vap-status-3xx: var(--vp-c-indigo-1, #3451b2);
+  --vap-status-4xx: var(--vp-c-yellow-1, #d97706);
+  --vap-status-5xx: var(--vp-c-red-1, #dc2626);
+
   // Typography + surfaces (graceful fallbacks outside VitePress)
   --vap-font-ui: var(--vp-font-family-base, system-ui, sans-serif);
   --vap-font-mono: var(
@@ -50,6 +77,30 @@ html.dark {
   --vap-surface-border: var(--vp-c-divider, #2e2e32);
   --vap-text-1: var(--vp-c-text-1, #dfdfd6);
   --vap-text-2: var(--vp-c-text-2, #98989f);
+
+  // Method pill bg/text — dark-mode tint + readable text
+  --vap-method-get-bg: var(--vp-c-indigo-soft, #172554);
+  --vap-method-get-text: var(--vp-c-indigo-1, #a8b1ff);
+  --vap-method-head-bg: var(--vp-c-indigo-soft, #172554);
+  --vap-method-head-text: var(--vp-c-indigo-1, #a8b1ff);
+  --vap-method-options-bg: var(--vp-c-indigo-soft, #172554);
+  --vap-method-options-text: var(--vp-c-indigo-1, #a8b1ff);
+  --vap-method-trace-bg: var(--vp-c-indigo-soft, #172554);
+  --vap-method-trace-text: var(--vp-c-indigo-1, #a8b1ff);
+  --vap-method-post-bg: var(--vp-c-yellow-soft, #451a03);
+  --vap-method-post-text: var(--vp-c-yellow-1, #f9b44e);
+  --vap-method-put-bg: var(--vp-c-yellow-soft, #451a03);
+  --vap-method-put-text: var(--vp-c-yellow-1, #f9b44e);
+  --vap-method-patch-bg: var(--vp-c-yellow-soft, #451a03);
+  --vap-method-patch-text: var(--vp-c-yellow-1, #f9b44e);
+  --vap-method-delete-bg: var(--vp-c-red-soft, #450a0a);
+  --vap-method-delete-text: var(--vp-c-red-1, #f66f81);
+
+  // Status bucket swatches — dark-mode lifted hues
+  --vap-status-2xx: var(--vp-c-green-1, #3dd68c);
+  --vap-status-3xx: var(--vp-c-indigo-1, #a8b1ff);
+  --vap-status-4xx: var(--vp-c-yellow-1, #f9b44e);
+  --vap-status-5xx: var(--vp-c-red-1, #f66f81);
 
   // VSCode dark palette for JSON on dark code backgrounds
   --vap-json-key: #9cdcfe;

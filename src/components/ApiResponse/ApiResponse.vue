@@ -1,8 +1,9 @@
 <template>
   <div v-if="hasResponse" class="vap-response">
     <div class="vap-response__bar">
-      <span v-if="status !== null" class="vap-response__status">
+      <span v-if="status !== null" class="vap-response__status" :class="statusBucketClass">
         Status:
+        <span v-if="statusBucketLabel" class="vap-sr-only">{{ statusBucketLabel }}</span>
         <span class="vap-badge" :class="status < 300 ? 'vap-badge--success' : 'vap-badge--danger'">
           {{ status }}
         </span>
@@ -85,6 +86,32 @@ let curlTimeout: ReturnType<typeof setTimeout> | null = null
 onBeforeUnmount(() => {
   if (copyTimeout) clearTimeout(copyTimeout)
   if (curlTimeout) clearTimeout(curlTimeout)
+})
+
+const statusBucketClass = computed(() => {
+  if (props.status === null || props.status === undefined) return null
+  const hundreds = Math.floor(props.status / 100)
+  if (hundreds >= 2 && hundreds <= 5) return `vap-response__status--${hundreds}xx`
+  return null
+})
+
+const statusBucketLabel = computed(() => {
+  if (props.status === null || props.status === undefined) return null
+  const hundreds = Math.floor(props.status / 100)
+  switch (hundreds) {
+    case 1:
+      return 'Informational'
+    case 2:
+      return 'Success'
+    case 3:
+      return 'Redirect'
+    case 4:
+      return 'Client error'
+    case 5:
+      return 'Server error'
+    default:
+      return null
+  }
 })
 
 const hasResponse = computed(() => {

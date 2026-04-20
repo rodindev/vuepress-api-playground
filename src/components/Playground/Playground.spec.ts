@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { h } from 'vue'
 import Playground from './Playground.vue'
 
 function mockFetch(body: unknown, status = 200, headers?: Record<string, string>) {
@@ -596,6 +597,158 @@ describe('Playground', () => {
       const url = fetchMock.mock.calls[0]![0] as string
       expect(url).toContain('page=2')
       expect(url).toContain('limit=25')
+    })
+  })
+
+  describe('response status dot', () => {
+    const cases: Array<{ status: number; bucket: string; label: string }> = [
+      { status: 200, bucket: '2xx', label: 'Success' },
+      { status: 301, bucket: '3xx', label: 'Redirect' },
+      { status: 400, bucket: '4xx', label: 'Client error' },
+      { status: 500, bucket: '5xx', label: 'Server error' },
+    ]
+
+    for (const { status, bucket, label } of cases) {
+      it(`applies --${bucket} bucket class and sr-only label for ${status}`, async () => {
+        vi.stubGlobal('fetch', mockFetch({ ok: true }, status))
+
+        const wrapper = mount(Playground, {
+          props: { url: 'https://api.example.com', method: 'get' },
+        })
+        await findExecuteButton(wrapper).trigger('click')
+        await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
+
+        const statusEl = wrapper.find('.vap-response__status')
+        expect(statusEl.classes()).toContain(`vap-response__status--${bucket}`)
+        const srOnly = statusEl.find('.vap-sr-only')
+        expect(srOnly.exists()).toBe(true)
+        expect(srOnly.text()).toBe(label)
+      })
+    }
+
+    it('announces the bucket label exactly once for 201', async () => {
+      vi.stubGlobal('fetch', mockFetch({ id: 1 }, 201))
+
+      const wrapper = mount(Playground, {
+        props: { url: 'https://api.example.com', method: 'post' },
+      })
+      await findExecuteButton(wrapper).trigger('click')
+      await vi.waitFor(() => expect(wrapper.find('.vap-response').exists()).toBe(true))
+
+      const occurrences = (wrapper.text().match(/Success/g) ?? []).length
+      expect(occurrences).toBe(1)
+    })
+  })
+
+  describe('SSE streaming and abort', () => {
+    type StreamHandle = { abortListener: (() => void) | null }
+
+    function mockSSE(): { fetchFn: ReturnType<typeof vi.fn>; handle: StreamHandle } {
+      const handle: StreamHandle = { abortListener: null }
+      const fetchFn = vi.fn().mockImplementation(async (_url: string, init?: RequestInit) => {
+        const signal = init?.signal
+        const body = new ReadableStream<Uint8Array>({
+          start(controller) {
+            const onAbort = () => {
+              try {
+                controller.error(new DOMException('Aborted', 'AbortError'))
+              } catch {
+                /* already errored */
+              }
+            }
+            if (signal) {
+              if (signal.aborted) {
+                onAbort()
+                return
+              }
+              signal.addEventListener('abort', onAbort)
+              handle.abortListener = onAbort
+            }
+            controller.enqueue(new TextEncoder().encode('data: hello\n\n'))
+          },
+        })
+        return {
+          status: 200,
+          headers: new Headers({ 'content-type': 'text/event-stream' }),
+          body,
+        }
+      })
+      return { fetchFn, handle }
+    }
+
+    it('renders a Stop button while streaming and returns to idle after abort', async () => {
+      const { fetchFn } = mockSSE()
+      vi.stubGlobal('fetch', fetchFn)
+
+      const wrapper = mount(Playground, {
+        props: { url: 'https://api.example.com/events', method: 'get' },
+      })
+      await findExecuteButton(wrapper).trigger('click')
+
+      const stopBtn = await vi.waitFor(() => {
+        const btn = wrapper.find('[aria-label="Stop request"]')
+        expect(btn.exists()).toBe(true)
+        return btn
+      })
+      expect(stopBtn.text()).toBe('Stop')
+
+      await stopBtn.trigger('click')
+
+      await vi.waitFor(() => {
+        expect(wrapper.find('[aria-label="Stop request"]').exists()).toBe(false)
+        expect(wrapper.find('[aria-label="Execute request"]').exists()).toBe(true)
+      })
+    })
+
+    it('exposes abort and streaming to the send-button slot', async () => {
+      const { fetchFn } = mockSSE()
+      vi.stubGlobal('fetch', fetchFn)
+
+      const captured: Array<{ streaming: boolean; abort: () => void; execute: () => void }> = []
+
+      const wrapper = mount(Playground, {
+        props: { url: 'https://api.example.com/events', method: 'get' },
+        slots: {
+          'send-button': (slotProps: {
+            streaming: boolean
+            abort: () => void
+            execute: () => void
+            loading: boolean
+          }) => {
+            captured.push({
+              streaming: slotProps.streaming,
+              abort: slotProps.abort,
+              execute: slotProps.execute,
+            })
+            return h(
+              'button',
+              {
+                'data-test': 'slotted-btn',
+                'aria-label': 'Custom send',
+                onClick: slotProps.streaming ? slotProps.abort : slotProps.execute,
+              },
+              slotProps.streaming ? 'Halt' : 'Go'
+            )
+          },
+        },
+      })
+
+      await wrapper.find('[data-test="slotted-btn"]').trigger('click')
+
+      await vi.waitFor(() => {
+        const latest = captured[captured.length - 1]!
+        expect(latest.streaming).toBe(true)
+        expect(typeof latest.abort).toBe('function')
+      })
+      expect(wrapper.find('[data-test="slotted-btn"]').text()).toBe('Halt')
+
+      captured[captured.length - 1]!.abort()
+
+      await vi.waitFor(() => {
+        const latest = captured[captured.length - 1]!
+        expect(latest.streaming).toBe(false)
+      })
+      expect(wrapper.find('[data-test="slotted-btn"]').text()).toBe('Go')
     })
   })
 })

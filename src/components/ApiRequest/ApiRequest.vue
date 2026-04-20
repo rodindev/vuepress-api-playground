@@ -207,8 +207,23 @@
       />
     </div>
 
-    <slot name="send-button" :loading="loading" :execute="emitExecute">
+    <slot
+      name="send-button"
+      :loading="loading"
+      :execute="emitExecute"
+      :abort="abort"
+      :streaming="streaming"
+    >
       <button
+        v-if="streaming"
+        class="vap-btn vap-btn--primary"
+        aria-label="Stop request"
+        @click="abort"
+      >
+        Stop
+      </button>
+      <button
+        v-else
         class="vap-btn vap-btn--primary"
         :disabled="loading"
         aria-label="Execute request"
@@ -240,6 +255,8 @@ const props = withDefaults(defineProps<ApiRequestProps>(), {
   auth: undefined,
   server: undefined,
   dense: false,
+  streaming: false,
+  abort: () => {},
 })
 
 const emit = defineEmits<{
@@ -249,7 +266,12 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  'send-button'(props: { loading: boolean; execute: () => void }): unknown
+  'send-button'(props: {
+    loading: boolean
+    execute: () => void
+    abort: () => void
+    streaming: boolean
+  }): unknown
 }>()
 
 const BODY_ELIGIBLE_TYPES: PlaygroundContentType[] = [

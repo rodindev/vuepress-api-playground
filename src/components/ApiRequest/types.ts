@@ -14,4 +14,6 @@ export interface ApiRequestProps {
   auth?: AuthConfig
   server?: string
   dense?: boolean
+  streaming?: boolean
+  abort?: () => void
 }

@@ -370,6 +370,42 @@ select.vap-input {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
+  --_status-dot: var(--vap-text-2, var(--vp-c-text-2, #6b7280));
+
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--_status-dot);
+  }
+
+  &--2xx {
+    --_status-dot: var(--vap-status-2xx, var(--vp-c-green-1, #16a34a));
+  }
+  &--3xx {
+    --_status-dot: var(--vap-status-3xx, var(--vp-c-indigo-1, #3451b2));
+  }
+  &--4xx {
+    --_status-dot: var(--vap-status-4xx, var(--vp-c-yellow-1, #d97706));
+  }
+  &--5xx {
+    --_status-dot: var(--vap-status-5xx, var(--vp-c-red-1, #dc2626));
+  }
+}
+
+// Visually hidden, announced by screen readers
+.vap-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .vap-response__time {

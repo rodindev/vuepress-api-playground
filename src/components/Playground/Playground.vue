@@ -22,6 +22,8 @@
       :auth="authModel"
       :server="serverModel"
       :dense="dense"
+      :streaming="response.streaming"
+      :abort="abort"
       @update:auth="authModel = $event"
       @update:server="serverModel = $event"
       @execute="handleExecute"
@@ -123,6 +125,10 @@ let abortController: AbortController | null = null
 onBeforeUnmount(() => {
   abortController?.abort()
 })
+
+function abort() {
+  abortController?.abort()
+}
 
 function headersToRecord(headers: Headers): Record<string, string> {
   const record: Record<string, string> = {}
