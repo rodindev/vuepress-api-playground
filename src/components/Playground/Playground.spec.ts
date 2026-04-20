@@ -457,4 +457,145 @@ describe('Playground', () => {
 
     expect(wrapper.find('.vap-response__size').exists()).toBe(true)
   })
+
+  describe('dense mode', () => {
+    it('renders data grid instead of table when dense is true', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+          data: [
+            { name: 'page', value: '1' },
+            { name: 'limit', value: '10' },
+          ],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('.vap-data-grid').exists()).toBe(true)
+      expect(wrapper.find('.vap-table thead').exists()).toBe(false)
+    })
+
+    it('renders standard table when dense is false', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: false,
+          data: [{ name: 'page', value: '1' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('.vap-table').exists()).toBe(true)
+      expect(wrapper.find('.vap-data-grid').exists()).toBe(false)
+    })
+
+    it('renders labels with for attributes in dense mode', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+          data: [{ name: 'q', value: '' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      const label = wrapper.find('.vap-data-grid__label')
+      expect(label.exists()).toBe(true)
+      expect(label.text()).toBe('q')
+      expect(label.attributes('for')).toBe('vap-data-0')
+    })
+
+    it('renders descriptions when provided in dense mode', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+          data: [{ name: 'q', value: '', description: 'Full-text search query' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      const desc = wrapper.find('.vap-data-grid__desc')
+      expect(desc.exists()).toBe(true)
+      expect(desc.text()).toBe('Full-text search query')
+      expect(desc.attributes('id')).toBe('vap-desc-0')
+    })
+
+    it('links aria-describedby to description id', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+          data: [{ name: 'q', value: '', description: 'Search query' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      const input = wrapper.find('#vap-data-0')
+      expect(input.attributes('aria-describedby')).toBe('vap-desc-0')
+    })
+
+    it('omits aria-describedby when no description', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+          data: [{ name: 'q', value: '' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      const input = wrapper.find('#vap-data-0')
+      expect(input.attributes('aria-describedby')).toBeUndefined()
+    })
+
+    it('handles file inputs in dense mode', async () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'post',
+          dense: true,
+          data: [{ name: 'avatar', value: '', type: 'file' }],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      const fileInput = wrapper.find('input[type="file"]')
+      expect(fileInput.exists()).toBe(true)
+    })
+
+    it('adds dense class to playground wrapper', () => {
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com',
+          method: 'get',
+          dense: true,
+        },
+      })
+      expect(wrapper.find('.vap-playground--dense').exists()).toBe(true)
+    })
+
+    it('executes requests correctly in dense mode', async () => {
+      const fetchMock = mockFetch({ ok: true })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const wrapper = mount(Playground, {
+        props: {
+          url: 'https://api.example.com/items',
+          method: 'get',
+          dense: true,
+          data: [
+            { name: 'page', value: '2', type: 'query' },
+            { name: 'limit', value: '25', type: 'query' },
+          ],
+        },
+      })
+      await wrapper.vm.$nextTick()
+      await findExecuteButton(wrapper).trigger('click')
+      await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled())
+      const url = fetchMock.mock.calls[0]![0] as string
+      expect(url).toContain('page=2')
+      expect(url).toContain('limit=25')
+    })
+  })
 })

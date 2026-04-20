@@ -47,6 +47,7 @@ Path parameters are consumed from the data — remaining fields become query par
 | `servers`        | `string[]`               | no       | —                  | Server URLs. When more than one, a selector is rendered                                                                              |
 | `contentType`    | `PlaygroundContentType`  | no       | —                  | Body serialization: `application/json`, `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, `application/xml`  |
 | `body`           | `string`                 | no       | —                  | Preset request body. Active when `contentType` is `application/json`, `text/plain`, or `application/xml`. User edits take precedence |
+| `dense`          | `boolean`                | no       | `false`            | Compact layout: data fields render as a two-column grid with labels above inputs instead of a Key/Value table                        |
 | `v-model:auth`   | `AuthConfig`             | no       | `{ type: 'none' }` | Declarative auth. See below                                                                                                          |
 | `v-model:server` | `string`                 | no       | first of `servers` | Currently selected base URL                                                                                                          |
 
@@ -82,9 +83,12 @@ Empty values are skipped; no header or query param is attached when the field is
 interface PlaygroundDataItem {
   name: string // field name (used as key in request)
   value: string // default value
-  type?: string // input type: 'text', 'number', etc.
+  type?: string // semantic: 'path', 'query', 'header', 'file'; or HTML input type: 'text', 'number', 'email', 'password', 'url', 'search', 'tel'
+  description?: string // shown as a subtitle below the label in dense mode
 }
 ```
+
+Semantic types (`path`, `query`, `header`) render as text inputs but affect request building: path parameters substitute into the URL, query parameters append to the query string, and header parameters become request headers.
 
 ## Request Behavior
 
@@ -141,6 +145,7 @@ function onExecute(request) {
 | `loading`    | `boolean`                | `false` | Shows spinner and disables execute |
 | `showMethod` | `boolean`                | `false` | Show method badge                  |
 | `headingTag` | `string`                 | `'h4'`  | HTML tag for section headings      |
+| `dense`      | `boolean`                | `false` | Compact two-column grid layout     |
 
 Emits `@execute` with `{ url: string, init: RequestInit }`.
 

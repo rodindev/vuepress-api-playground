@@ -170,7 +170,9 @@
           <label class="vap-data-grid__label" :for="`vap-data-${index}`">
             {{ item.name }}
           </label>
-          <span v-if="item.description" class="vap-data-grid__desc">{{ item.description }}</span>
+          <span v-if="item.description" :id="`vap-desc-${index}`" class="vap-data-grid__desc">{{
+            item.description
+          }}</span>
           <input
             v-if="item.type === 'file'"
             :id="`vap-data-${index}`"

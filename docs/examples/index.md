@@ -297,6 +297,40 @@ When `servers` has more than one entry, a selector is rendered. Use
 
 :::
 
+## Dense Mode
+
+Compact two-column grid layout for forms with many fields. Useful when embedding the playground in narrow panels or multi-column layouts.
+
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts"
+  method="get"
+  dense
+  :data="[
+    { name: 'userId', value: '1', type: 'query', description: 'Filter by author' },
+    { name: '_page', value: '1', type: 'query', description: 'Page number' },
+    { name: '_limit', value: '10', type: 'query', description: 'Items per page' },
+    { name: '_sort', value: 'id', type: 'query', description: 'Sort field' },
+  ]"
+/>
+
+::: details Source
+
+```vue
+<VueApiPlayground
+  url="https://jsonplaceholder.typicode.com/posts"
+  method="get"
+  dense
+  :data="[
+    { name: 'userId', value: '1', type: 'query', description: 'Filter by author' },
+    { name: '_page', value: '1', type: 'query', description: 'Page number' },
+    { name: '_limit', value: '10', type: 'query', description: 'Items per page' },
+    { name: '_sort', value: 'id', type: 'query', description: 'Sort field' },
+  ]"
+/>
+```
+
+:::
+
 ## Lifecycle Events
 
 Observe request timing, status, and errors via `@request-start`,
