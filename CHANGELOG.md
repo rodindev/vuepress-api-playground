@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.1](https://github.com/rodindev/vue-api-playground/compare/v2.3.0...v2.3.1) (2026-04-20)
+
+### Bug Fixes
+
+* aria-describedby bug, add tests and docs for dense mode ([fbc586f](https://github.com/rodindev/vue-api-playground/commit/fbc586f98542c3cc01b4931d24eede1adcbaa5bb))
+
 ## [2.3.0](https://github.com/rodindev/vue-api-playground/compare/v2.2.0...v2.3.0) (2026-04-20)
 
 ### Features
