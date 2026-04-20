@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.0](https://github.com/rodindev/vue-api-playground/compare/v2.3.1...v2.4.0) (2026-04-20)
+
+### Features
+
+* status dot, SSE stop, and method pill accent tokens ([8acd5fe](https://github.com/rodindev/vue-api-playground/commit/8acd5fef834af6abda39536f3541597d2b03520c))
+
+### Documentation
+
+* document status tokens, abort slot props, and method pill tokens ([7928b2f](https://github.com/rodindev/vue-api-playground/commit/7928b2f6cc04d1b939661742423242f3a62aa8e1))
+
 ## [2.3.1](https://github.com/rodindev/vue-api-playground/compare/v2.3.0...v2.3.1) (2026-04-20)
 
 ### Bug Fixes
