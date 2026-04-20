@@ -28,6 +28,24 @@ The component uses CSS custom properties with a `--vap-*` prefix. Override them 
 | `--vap-info`       | Info badge color (GET method)                  | same as brand |
 | `--vap-radius`     | Border radius for inputs, buttons, badges      | `6px`         |
 | `--vap-font-size`  | Base font size                                 | `0.9rem`      |
+| `--vap-status-2xx` | Response status dot — 2xx (Success)            | `#16a34a`     |
+| `--vap-status-3xx` | Response status dot — 3xx (Redirect)           | `#3451b2`     |
+| `--vap-status-4xx` | Response status dot — 4xx (Client error)       | `#d97706`     |
+| `--vap-status-5xx` | Response status dot — 5xx (Server error)       | `#dc2626`     |
+
+The response bar renders a 0.55em colored dot prefix whose color resolves from the bucket the status code falls in. A visually hidden `"Success" / "Redirect" / "Client error" / "Server error" / "Informational"` label is included for screen readers, so the status is announced semantically once per response.
+
+### Method pill bg/text tokens
+
+Additional extension points let theme authors recolor HTTP method pills with a bg+text pair instead of a single fill. They follow the `--vap-*-{soft,1}` VitePress cascade:
+
+| Token                                                       | Default (light)       | Default (dark)        |
+| ----------------------------------------------------------- | --------------------- | --------------------- |
+| `--vap-method-{get,head,options,trace}-bg` / `-text` (read) | `#dbeafe` / `#1e40af` | `#172554` / `#a8b1ff` |
+| `--vap-method-{post,put,patch}-bg` / `-text` (write)        | `#fef3c7` / `#92400e` | `#451a03` / `#f9b44e` |
+| `--vap-method-delete-bg` / `-text` (destructive)            | `#fee2e2` / `#991b1b` | `#450a0a` / `#f66f81` |
+
+These are opt-in hooks — the default `.vap-method--{verb}` rule still uses the single `--vap-method-{verb}` fill variable, so existing solid-color badges are preserved. Wire them up in your own CSS to switch to a tinted-pill style.
 
 ### Global override
 
@@ -114,36 +132,41 @@ If CSS variables aren't enough, you can target the component's CSS classes direc
 
 ### Class reference
 
-| Class                     | Element                        |
-| ------------------------- | ------------------------------ |
-| `.vap-playground`         | Playground root container      |
-| `.vap-playground__method` | Playground method heading      |
-| `.vap-playground__url`    | Playground URL heading         |
-| `.vap-request`            | ApiRequest root container      |
-| `.vap-request__method`    | ApiRequest method heading      |
-| `.vap-request__import`    | cURL import `<details>`        |
-| `.vap-response`           | ApiResponse root / wrapper     |
-| `.vap-response__bar`      | Status + time + buttons bar    |
-| `.vap-response__status`   | Status text + badge            |
-| `.vap-response__time`     | Response time display          |
-| `.vap-response__size`     | Response payload size          |
-| `.vap-response__headers`  | Response headers `<details>`   |
-| `.vap-table`              | Shared table (headers, data)   |
-| `.vap-input`              | Shared input fields            |
-| `.vap-btn`                | Button base class              |
-| `.vap-btn--primary`       | Execute button                 |
-| `.vap-btn--secondary`     | Copy / cURL buttons            |
-| `.vap-code`               | Code/response `<pre>` block    |
-| `.vap-badge`              | Badge base class               |
-| `.vap-badge--success`     | 2xx status / POST badge        |
-| `.vap-badge--danger`      | 4xx/5xx status / DELETE badge  |
-| `.vap-badge--warning`     | PUT/PATCH method badge         |
-| `.vap-badge--info`        | GET method badge               |
-| `.vap-spinner`            | Loading spinner                |
-| `.vap-json-key`           | JSON key in highlighted output |
-| `.vap-json-string`        | JSON string value              |
-| `.vap-json-number`        | JSON number value              |
-| `.vap-json-bool`          | JSON boolean/null value        |
+| Class                        | Element                                  |
+| ---------------------------- | ---------------------------------------- |
+| `.vap-playground`            | Playground root container                |
+| `.vap-playground__method`    | Playground method heading                |
+| `.vap-playground__url`       | Playground URL heading                   |
+| `.vap-request`               | ApiRequest root container                |
+| `.vap-request__method`       | ApiRequest method heading                |
+| `.vap-request__import`       | cURL import `<details>`                  |
+| `.vap-response`              | ApiResponse root / wrapper               |
+| `.vap-response__bar`         | Status + time + buttons bar              |
+| `.vap-response__status`      | Status text + badge (dot via `::before`) |
+| `.vap-response__status--2xx` | Bucket modifier — Success                |
+| `.vap-response__status--3xx` | Bucket modifier — Redirect               |
+| `.vap-response__status--4xx` | Bucket modifier — Client error           |
+| `.vap-response__status--5xx` | Bucket modifier — Server error           |
+| `.vap-sr-only`               | Visually hidden, screen-reader-only text |
+| `.vap-response__time`        | Response time display                    |
+| `.vap-response__size`        | Response payload size                    |
+| `.vap-response__headers`     | Response headers `<details>`             |
+| `.vap-table`                 | Shared table (headers, data)             |
+| `.vap-input`                 | Shared input fields                      |
+| `.vap-btn`                   | Button base class                        |
+| `.vap-btn--primary`          | Execute button                           |
+| `.vap-btn--secondary`        | Copy / cURL buttons                      |
+| `.vap-code`                  | Code/response `<pre>` block              |
+| `.vap-badge`                 | Badge base class                         |
+| `.vap-badge--success`        | 2xx status / POST badge                  |
+| `.vap-badge--danger`         | 4xx/5xx status / DELETE badge            |
+| `.vap-badge--warning`        | PUT/PATCH method badge                   |
+| `.vap-badge--info`           | GET method badge                         |
+| `.vap-spinner`               | Loading spinner                          |
+| `.vap-json-key`              | JSON key in highlighted output           |
+| `.vap-json-string`           | JSON string value                        |
+| `.vap-json-number`           | JSON number value                        |
+| `.vap-json-bool`             | JSON boolean/null value                  |
 
 ### Example: custom button style
 

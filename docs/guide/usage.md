@@ -153,6 +153,28 @@ Supports **Ctrl+Enter** (Cmd+Enter on Mac) to execute from any input.
 
 Includes a collapsible **Paste cURL** section for importing cURL commands.
 
+#### `send-button` slot
+
+Override the default send button. The slot exposes `{ loading, execute, abort, streaming }`:
+
+```vue
+<VueApiPlayground url="https://api.example.com/events" method="get">
+  <template #send-button="{ loading, execute, abort, streaming }">
+    <button v-if="streaming" @click="abort">Stop</button>
+    <button v-else :disabled="loading" @click="execute">
+      {{ loading ? 'Sending…' : 'Send' }}
+    </button>
+  </template>
+</VueApiPlayground>
+```
+
+- `loading` — `true` while awaiting the initial `fetch()` response
+- `streaming` — `true` while an `text/event-stream` body is being read
+- `execute` — fires the request
+- `abort` — aborts the in-flight request or SSE reader; safe to call when idle
+
+When no slot is provided, the default button automatically swaps to a `Stop` label while `streaming` is `true` and wires its click to `abort()`.
+
 ### ApiResponse
 
 A standalone response display with copy and cURL export.
