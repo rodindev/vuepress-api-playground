@@ -216,6 +216,40 @@ select.vap-input {
   cursor: pointer;
 }
 
+// Dense data grid (compact alternative to .vap-table for data items)
+.vap-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.vap-data-grid__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.35rem 0;
+}
+
+.vap-data-grid__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--_text-light);
+}
+
+.vap-data-grid__desc {
+  font-size: 0.7rem;
+  color: var(--_text-light);
+  opacity: 0.8;
+  line-height: 1.3;
+}
+
+@media (max-width: 480px) {
+  .vap-data-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 // Shared buttons
 .vap-btn {
   display: inline-flex;

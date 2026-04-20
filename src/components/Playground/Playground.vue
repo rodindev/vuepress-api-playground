@@ -1,5 +1,5 @@
 <template>
-  <div class="vap-playground">
+  <div class="vap-playground" :class="{ 'vap-playground--dense': dense }">
     <component v-if="showMethod" :is="headingTag" class="vap-playground__method">
       Method:
       <MethodBadge :method="method" />
@@ -21,6 +21,7 @@
       :body="body"
       :auth="authModel"
       :server="serverModel"
+      :dense="dense"
       @update:auth="authModel = $event"
       @update:server="serverModel = $event"
       @execute="handleExecute"
@@ -79,6 +80,7 @@ const props = withDefaults(defineProps<PlaygroundProps>(), {
   servers: undefined,
   contentType: undefined,
   body: undefined,
+  dense: false,
 })
 
 const emit = defineEmits<{

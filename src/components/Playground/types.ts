@@ -16,6 +16,7 @@ export interface PlaygroundDataItem {
   name: string
   value: string | File
   type?: PlaygroundDataItemType
+  description?: string
 }
 
 export type PlaygroundContentType =
@@ -61,4 +62,5 @@ export interface PlaygroundProps {
   servers?: string[]
   contentType?: PlaygroundContentType
   body?: string
+  dense?: boolean
 }

@@ -13,4 +13,5 @@ export interface ApiRequestProps {
   body?: string
   auth?: AuthConfig
   server?: string
+  dense?: boolean
 }

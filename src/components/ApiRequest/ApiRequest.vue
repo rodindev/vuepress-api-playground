@@ -1,5 +1,5 @@
 <template>
-  <div class="vap-request" @keydown="onKeydown">
+  <div class="vap-request" :class="{ 'vap-request--dense': dense }" @keydown="onKeydown">
     <details class="vap-request__import">
       <summary>Paste cURL</summary>
       <div class="vap-request__import-body">
@@ -135,7 +135,7 @@
 
     <template v-if="inputData.length > 0">
       <component :is="headingTag">Data:</component>
-      <table class="vap-table">
+      <table v-if="!dense" class="vap-table">
         <thead>
           <tr>
             <th>Key</th>
@@ -165,6 +165,33 @@
           </tr>
         </tbody>
       </table>
+      <div v-else class="vap-data-grid">
+        <div v-for="(item, index) in inputData" :key="`data-${index}`" class="vap-data-grid__field">
+          <label class="vap-data-grid__label" :for="`vap-data-${index}`">
+            {{ item.name }}
+          </label>
+          <span v-if="item.description" class="vap-data-grid__desc">{{ item.description }}</span>
+          <input
+            v-if="item.type === 'file'"
+            :id="`vap-data-${index}`"
+            type="file"
+            class="vap-input"
+            :aria-label="item.name"
+            :aria-describedby="item.description ? `vap-desc-${index}` : undefined"
+            @change="onFileChange($event, index)"
+          />
+          <input
+            v-else
+            :id="`vap-data-${index}`"
+            v-model="inputValues[index]"
+            :type="htmlInputType(item.type)"
+            class="vap-input"
+            :aria-label="item.name"
+            :aria-describedby="item.description ? `vap-desc-${index}` : undefined"
+            @keydown.enter.exact="emitExecute"
+          />
+        </div>
+      </div>
     </template>
 
     <div v-if="bodyEligible" class="vap-request__body">
@@ -210,6 +237,7 @@ const props = withDefaults(defineProps<ApiRequestProps>(), {
   body: undefined,
   auth: undefined,
   server: undefined,
+  dense: false,
 })
 
 const emit = defineEmits<{
