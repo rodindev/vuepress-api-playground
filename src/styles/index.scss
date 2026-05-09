@@ -149,6 +149,7 @@
 
   select {
     width: 100%;
+    margin-top: 0.5rem;
   }
 }
 
@@ -163,6 +164,7 @@
 .vap-request__body-textarea {
   height: auto;
   min-height: 6rem;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   line-height: 1.4;
   resize: vertical;
