@@ -81,3 +81,78 @@ describe('toPython', () => {
     expect(snippet.code).toContain('data=data')
   })
 })
+
+describe('snippet tokens', () => {
+  it('tokens concat to code', () => {
+    const cases = [
+      () => toCurlSnippet({ url: 'https://api.example.com', method: 'GET' }),
+      () =>
+        toCurlSnippet({
+          url: 'https://api.example.com',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer abc' },
+          body: '{"k":"v"}',
+        }),
+      () => toFetch({ url: 'https://api.example.com', method: 'GET' }),
+      () =>
+        toFetch({
+          url: 'https://api.example.com',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer abc' },
+          body: '{"k":"v"}',
+        }),
+      () => toNode({ url: 'https://api.example.com', method: 'GET' }),
+      () =>
+        toNode({
+          url: 'https://api.example.com',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{"k":"v"}',
+        }),
+      () => toPython({ url: 'https://api.example.com', method: 'GET' }),
+      () =>
+        toPython({
+          url: 'https://api.example.com',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{"k":"v"}',
+        }),
+    ]
+    for (const make of cases) {
+      const snippet = make()
+      expect(snippet.tokens.map((t) => t.text).join('')).toBe(snippet.code)
+    }
+  })
+
+  it('curl tokens start with curl keyword and include flag and url', () => {
+    const { tokens } = toCurlSnippet({
+      url: 'https://api.example.com',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    expect(tokens[0]).toEqual({ type: 'keyword', text: 'curl' })
+    expect(tokens.some((t) => t.type === 'flag')).toBe(true)
+    expect(tokens.some((t) => t.type === 'url')).toBe(true)
+  })
+
+  it('fetch tokens carry function call and url', () => {
+    const { tokens } = toFetch({ url: 'https://api.example.com', method: 'GET' })
+    expect(tokens.some((t) => t.type === 'function' && t.text === 'fetch')).toBe(true)
+    expect(tokens.some((t) => t.type === 'function' && t.text === 'then')).toBe(true)
+    expect(tokens.some((t) => t.type === 'url')).toBe(true)
+  })
+
+  it('node tokens use const and await keywords', () => {
+    const { tokens } = toNode({ url: 'https://api.example.com', method: 'GET' })
+    expect(tokens.some((t) => t.type === 'keyword' && t.text === 'const')).toBe(true)
+    expect(tokens.some((t) => t.type === 'keyword' && t.text === 'await')).toBe(true)
+    expect(tokens.some((t) => t.type === 'function' && t.text === 'fetch')).toBe(true)
+  })
+
+  it('python tokens import requests and call method function', () => {
+    const { tokens } = toPython({ url: 'https://api.example.com', method: 'POST' })
+    expect(tokens.some((t) => t.type === 'keyword' && t.text === 'import')).toBe(true)
+    expect(tokens.some((t) => t.type === 'function' && t.text === 'post')).toBe(true)
+    expect(tokens.some((t) => t.type === 'function' && t.text === 'print')).toBe(true)
+  })
+})

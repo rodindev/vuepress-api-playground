@@ -19,7 +19,13 @@ export type { ApiRequestProps } from './components/ApiRequest/types'
 export type { ApiResponseProps, ApiResponseRequest } from './components/ApiResponse/types'
 export type { MethodBadgeProps } from './components/MethodBadge/types'
 export type { ToCurlInput, ParsedCurl } from './utils/curl'
-export type { Snippet, SnippetLanguage, SnippetRequest } from './utils/snippets'
+export type {
+  Snippet,
+  SnippetLanguage,
+  SnippetRequest,
+  SnippetToken,
+  SnippetTokenType,
+} from './utils/snippets'
 
 export { Playground, ApiRequest, ApiResponse, MethodBadge }
 export { toCurl, parseCurl } from './utils/curl'

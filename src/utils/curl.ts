@@ -1,3 +1,5 @@
+import type { SnippetToken } from './snippets'
+
 export interface ToCurlInput {
   url: string
   method: string
@@ -17,26 +19,51 @@ function escapeShellArg(value: string): string {
   return value.replace(/'/g, "'\\''")
 }
 
-export function toCurl(request: ToCurlInput): string {
-  const parts: string[] = ['curl']
+export function toCurlTokens(request: ToCurlInput): SnippetToken[] {
+  const tokens: SnippetToken[] = [{ type: 'keyword', text: 'curl' }]
 
-  if (request.method.toUpperCase() !== 'GET') {
-    parts.push(`-X ${request.method.toUpperCase()}`)
+  const method = request.method.toUpperCase()
+  if (method !== 'GET') {
+    tokens.push(
+      { type: 'text', text: ' ' },
+      { type: 'flag', text: '-X' },
+      { type: 'text', text: ' ' },
+      { type: 'text', text: method }
+    )
   }
 
   if (request.headers) {
     for (const [key, value] of Object.entries(request.headers)) {
-      parts.push(`-H '${escapeShellArg(`${key}: ${value}`)}'`)
+      tokens.push(
+        { type: 'text', text: ' ' },
+        { type: 'flag', text: '-H' },
+        { type: 'text', text: ' ' },
+        { type: 'string', text: `'${escapeShellArg(`${key}: ${value}`)}'` }
+      )
     }
   }
 
   if (request.body) {
-    parts.push(`-d '${escapeShellArg(request.body)}'`)
+    tokens.push(
+      { type: 'text', text: ' ' },
+      { type: 'flag', text: '-d' },
+      { type: 'text', text: ' ' },
+      { type: 'string', text: `'${escapeShellArg(request.body)}'` }
+    )
   }
 
-  parts.push(`'${escapeShellArg(request.url)}'`)
+  tokens.push(
+    { type: 'text', text: ' ' },
+    { type: 'url', text: `'${escapeShellArg(request.url)}'` }
+  )
 
-  return parts.join(' ')
+  return tokens
+}
+
+export function toCurl(request: ToCurlInput): string {
+  return toCurlTokens(request)
+    .map((t) => t.text)
+    .join('')
 }
 
 function tokenize(command: string): string[] {
