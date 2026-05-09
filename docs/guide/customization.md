@@ -47,6 +47,24 @@ Additional extension points let theme authors recolor HTTP method pills with a b
 
 These are opt-in hooks — the default `.vap-method--{verb}` rule still uses the single `--vap-method-{verb}` fill variable, so existing solid-color badges are preserved. Wire them up in your own CSS to switch to a tinted-pill style.
 
+### Syntax highlighting tokens
+
+Code-block colors for snippet tabs and the response viewer come from two token groups: semantic syntax tokens (`--vap-syntax-*`) and JSON-specific tokens (`--vap-json-*`). Defaults track the github-light-default and github-dark-default palettes used by VitePress' built-in Shiki themes, so the playground blends in with the surrounding docs.
+
+| Token                   | Default (light) | Default (dark) |
+| ----------------------- | --------------- | -------------- |
+| `--vap-syntax-string`   | `#0a3069`       | `#a5d6ff`      |
+| `--vap-syntax-number`   | `#0550ae`       | `#79c0ff`      |
+| `--vap-syntax-keyword`  | `#cf222e`       | `#ff7b72`      |
+| `--vap-syntax-comment`  | `#6e7781`       | `#8b949e`      |
+| `--vap-syntax-function` | `#8250df`       | `#d2a8ff`      |
+| `--vap-json-key`        | `#0550ae`       | `#79c0ff`      |
+| `--vap-json-string`     | `#0a3069`       | `#a5d6ff`      |
+| `--vap-json-number`     | `#0550ae`       | `#79c0ff`      |
+| `--vap-json-bool`       | `#cf222e`       | `#ff7b72`      |
+
+The JSON tokens are consumed directly by the `.vap-json-*` classes in the response viewer. The syntax tokens are extension points for theme authors and downstream tokenizers — the playground itself doesn't read them in default markup, but they're published so wrappers can stay color-aligned without re-declaring hex fallbacks.
+
 ### Global override
 
 Apply to all playground instances:
