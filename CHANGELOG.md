@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.5.0](https://github.com/rodindev/vue-api-playground/compare/v2.4.0...v2.5.0) (2026-05-09)
+
+### Features
+
+* **snippets:** emit structured tokens for curl, fetch, node, python ([415cdcd](https://github.com/rodindev/vue-api-playground/commit/415cdcd6eb1ce87197546d61fb73b7edfe141dbf))
+* **styles:** publish syntax tokens, switch json palette to github theme ([7c0a313](https://github.com/rodindev/vue-api-playground/commit/7c0a313b464256442e9c026ecad0b6e42f203db1))
+
+### Bug Fixes
+
+* **styles:** align spacing for Server and Body headings ([e60fdda](https://github.com/rodindev/vue-api-playground/commit/e60fdda3d7a7013e397b4828854e1a046d1f864c))
+
 ## [2.4.0](https://github.com/rodindev/vue-api-playground/compare/v2.3.1...v2.4.0) (2026-04-20)
 
 ### Features
