@@ -64,19 +64,22 @@
   --vap-text-2: var(--vp-c-text-2, #475569);
   --vap-radius: 8px;
 
-  // Syntax highlighting — github-light-default palette
-  --vap-syntax-string: #0a3069;
-  --vap-syntax-number: #0550ae;
-  --vap-syntax-keyword: #cf222e;
-  --vap-syntax-comment: #6e7781;
-  --vap-syntax-function: #8250df;
+  // Syntax highlighting - vscode-light-default palette
+  --vap-syntax-string: #a31515;
+  --vap-syntax-number: #098658;
+  --vap-syntax-keyword: #af00db;
+  --vap-syntax-comment: #008000;
+  --vap-syntax-function: #795e26;
+  --vap-syntax-flag: #af00db;
+  --vap-syntax-url: #0451a5;
+  --vap-syntax-identifier: var(--vap-text-1, #213547);
+  --vap-syntax-punct: var(--vap-text-2, #6e7781);
 
-  // JSON syntax highlighting — github-light-default palette. Works on
-  // both light and dark code surfaces, but dark mode overrides below.
-  --vap-json-key: #0550ae;
-  --vap-json-string: #0a3069;
-  --vap-json-number: #0550ae;
-  --vap-json-bool: #cf222e;
+  // JSON syntax - aliased to syntax tokens
+  --vap-json-key: var(--vap-syntax-url);
+  --vap-json-string: var(--vap-syntax-string);
+  --vap-json-number: var(--vap-syntax-number);
+  --vap-json-bool: var(--vap-syntax-keyword);
 }
 
 html.dark {
@@ -109,16 +112,14 @@ html.dark {
   --vap-status-4xx: var(--vp-c-yellow-1, #f9b44e);
   --vap-status-5xx: var(--vp-c-red-1, #f66f81);
 
-  // Syntax highlighting — github-dark-default palette
-  --vap-syntax-string: #a5d6ff;
-  --vap-syntax-number: #79c0ff;
-  --vap-syntax-keyword: #ff7b72;
-  --vap-syntax-comment: #8b949e;
-  --vap-syntax-function: #d2a8ff;
-
-  // github-dark-default palette for JSON on dark code backgrounds
-  --vap-json-key: #79c0ff;
-  --vap-json-string: #a5d6ff;
-  --vap-json-number: #79c0ff;
-  --vap-json-bool: #ff7b72;
+  // Syntax highlighting - vscode-dark-default palette
+  --vap-syntax-string: #ce9178;
+  --vap-syntax-number: #b5cea8;
+  --vap-syntax-keyword: #c586c0;
+  --vap-syntax-comment: #6a9955;
+  --vap-syntax-function: #dcdcaa;
+  --vap-syntax-flag: #c586c0;
+  --vap-syntax-url: #4ec9b0;
+  --vap-syntax-identifier: var(--vap-text-1, #dfdfd6);
+  --vap-syntax-punct: var(--vap-text-2, #8b949e);
 }
