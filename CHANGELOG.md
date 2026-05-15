@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.6.0](https://github.com/rodindev/vue-api-playground/compare/v2.5.0...v2.6.0) (2026-05-15)
+
+### Features
+
+* **styles:** expand syntax tokens and switch palette to vscode default ([8fc624b](https://github.com/rodindev/vue-api-playground/commit/8fc624b1e95dbf7939087818879e19371a99a51f))
+
 ## [2.5.0](https://github.com/rodindev/vue-api-playground/compare/v2.4.0...v2.5.0) (2026-05-09)
 
 ### Features
